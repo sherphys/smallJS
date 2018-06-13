@@ -1,0 +1,31 @@
+{
+  "name": "smalljs-dbsql",
+  "version": "1.0.0",
+  "description": "API schedule appointment for a EPS, national coverage (example) ",
+  "main": "index.js",
+  "scripts": {
+    "lint": "standart --fix",
+    "setup": "DEBUG=platziverse:* node setup.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sherphys/smallJS.git"
+  },
+  "author": "Sheryl Avendaño",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sherphys/smallJS/issues"
+  },
+  "homepage": "https://github.com/sherphys/smallJS#readme",
+  "devDependencies": {
+    "ava": "^0.25.0",
+    "nyc": "^12.0.2",
+    "sinon": "^6.0.0",
+    "sqlite3": "^4.0.0",
+    "standart": "^6.1.0"
+  },
+  "dependencies": {
+    "defaults": "^1.0.3"
+  }
+}

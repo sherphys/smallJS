@@ -1,0 +1,64 @@
+ 1404  npm i
+ 1405  npm run build
+ 1406  npm start
+ 1409  npm install plotly
+ 1561  npm install -g jscs
+ 1568  npm -v
+ 1573  npm -v
+ 1605  npm init 
+ 1746  npm i --save-deb standar
+ 1751  npm test
+ 1752  npm i --save defaults
+ 1753  npm i sqlite2 --save-dev
+ 1754  npm i sqlite3 --save-dev
+ 1755  npm run lint
+ 1756  npm run lint -- --fix
+ 1758  npm run test
+ 1857  npm i nyc --save-dev
+ 1858  npm run lint
+ 1862  npm run lint
+ 1863  npm run lint -- --fix
+ 1864  npm i nyc --save-dev
+ 1865  npm run test
+ 1866  npm test
+ 1867  npm i sinon --save-dev
+ 1868  npm i prosyquire --save-dev
+ 1869  npm i proxyquire --save-dev
+ 1903  npm init
+ 1920  npm i --save-dev standar
+ 1921  npm i --save-dev standart
+ 1922  npm run lint
+ 1945  npm run lint
+ 1946  npm test
+ 1948  npm run lint
+ 1949  npm run test
+ 1964  npm run lint
+ 1965  npm run test
+ 1966  npm run lint
+ 1967  npm run test
+ 1968  npm i --save-dev sinon
+ 1969  npm run test
+ 1970  npm i --save-dev ava
+ 1971  npm run test
+ 1976  npm run lint
+ 1977  npm run test
+ 1978  npm run lint
+ 1979  npm run test
+ 1981  npm run lint
+ 1982  npm run test
+ 1984  npm run lint
+ 1985  npm run test
+ 1987  npm run lint
+ 1988  npm run test
+ 1989  npm run lint
+ 1990  npm run test
+ 1992  npm run lint
+ 1993  npm run test 
+ 1994  npm run lint
+ 1995  npm run test 
+ 1996  npm run lint
+ 1997  npm run test 
+ 2008  npm run lint
+ 2011  npm run lint
+ 2012  npm run setup
+ 2013  history | grep npm > buscar
