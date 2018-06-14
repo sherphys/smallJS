@@ -14,18 +14,20 @@ module.exports = function setupUserModel(config) {
     flag: {
       type: Sequelize.BOOLEAN,
       allowNull: false,
-      defaultValue: false },
+      defaultValue: false 
+    },
 
     // Nuestro propio id usando documento de identidad
     ccid: {
-      type: Sequelize.STRING,
+      type: Sequelize.INTEGER,
       allowNull: false
     },
 
     // IPS_id
     ips: {
       type: Sequelize.INTEGER,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 0
     },
 
     // IPS_id secundarias (se puede poner por orden de prioridad)
@@ -33,7 +35,7 @@ module.exports = function setupUserModel(config) {
     // Dependiendo de la IPS principal el arreglo podría ser de 2 o más valores
     ipsExtra: {
       type: Sequelize.JSON,
-      allowNull:false
+      defaultValue: JSON.parse('0')
     },
 
     /* OTRA INFORMACIÓN DEL USER PENSANDO EN UN ACCESO DIRECTO */
@@ -76,7 +78,8 @@ module.exports = function setupUserModel(config) {
     // 3-> Cancelar
     pid: {
       type: Sequelize.INTEGER,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 1
     },
 
     // ¿Conectado o no conectado?

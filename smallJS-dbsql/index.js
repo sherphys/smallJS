@@ -30,7 +30,7 @@ module.exports = async function(config) {
   UserModel.hasMany(ScheduleUserModel)
   ScheduleUserModel.belongsTo(UserModel)
 
-  ScheduleIPSModel.belongsTo(UserModel, {as: 'IPS'})
+  ScheduleIPSModel.belongsTo(UserModel, {as: 'ips'})
 
   await sequelize.authenticate()
 
