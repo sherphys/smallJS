@@ -5,6 +5,10 @@ const setupScheduleIPSModel = require('./models/scheduleips')
 const setupScheduleUserModel = require('./models/scheduleuser')
 const defaults = require('defaults')
 
+const setupUser = require('./lib/user')
+// const setupScheduleIPSModel = require('./models/scheduleips')
+// const setupScheduleUserModel = require('./models/scheduleuser')
+
 module.exports = async function(config) {
   config = defaults(config, {
     dialect: 'sqlite',
@@ -26,8 +30,7 @@ module.exports = async function(config) {
   UserModel.hasMany(ScheduleUserModel)
   ScheduleUserModel.belongsTo(UserModel)
 
-  UserModel.hasMany(ScheduleIPSModel, {as: 'IPSid'})
-  ScheduleIPSModel.belongsTo(UserModel, {as: 'IPSid'})
+  ScheduleIPSModel.belongsTo(UserModel, {as: 'IPS'})
 
   await sequelize.authenticate()
 
@@ -35,7 +38,7 @@ module.exports = async function(config) {
     await sequelize.sync({ force: true })
   }
 
-  const User = {}
+  const User = setupUser(UserModel)
   const ScheduleUser = {}
   const ScheduleIPS = {}
   return {

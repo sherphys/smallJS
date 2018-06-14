@@ -14,11 +14,11 @@ module.exports = function setupScheduleUserModel(config) {
       allowNull: false
     },
 
-    // user_id
+    /* user_id
     userid: {
       type: Sequelize.INTEGER
       // allowNull: false
-    },
+    }, */
 
     // JSON de las citas [cita1,cita2,cita3,...,citan], cada elemento cita tendría
     // Nivel de la cita: (1 o 2)

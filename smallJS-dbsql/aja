@@ -1,0 +1,4 @@
+
+> smalljs-dbsql@1.0.0 test /home/shersnape/Ceiba/Java-Script/Tutorial/JavaScritp-Platzi/smallJS/smallJS-dbsql
+> DEBUG=platziverse:* nyc --reporter=lcov ava tests/ --verbose
+

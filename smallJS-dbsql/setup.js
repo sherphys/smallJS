@@ -1,16 +1,17 @@
 'use strict'
 
-const debug = require('debug')('platziverse:db:setup')
-const inquirer = require('inquirer')
+const debug = require('debug')('smallJS:db:setup')
+// const inquirer = require('inquirer')
 const chalk = require('chalk')
-const minimist = require('minimist')
+// const minimist = require('minimist')
 const db = require('./')
+// const args = minimist(process.argv)
+// const prompt = inquirer.createPromptModule()
 
-const args = minimist(process.argv)
-const prompt = inquirer.createPromptModule()
+// La base de datos se crea cada vez que iniciamos el servidor
 
 async function setup() {
-  if (!args.yes) {
+  /* if (!args.yes) {
     const answer = await prompt([
       {
         type: 'confirm',
@@ -22,16 +23,18 @@ async function setup() {
     if (!answer.setup) {
       return console.log('Nothing happened :)')
     }
-  }
+  } */
 
   const config = {
-    database: process.env.DB_NAME || 'platziverse',
-    username: process.env.DB_USER || 'platzi',
-    password: process.env.DB_PASS || 'platzi',
+    database: process.env.DB_NAME || 'mydbeps',
+    username: process.env.DB_USER || 'shersnape',
+    password: process.env.DB_PASS || 'itachi',
     host: process.env.DB_HOST || 'localhost',
     dialect: 'postgres',
     logging: s => debug(s),
-    setup: true
+    setup: true,
+    operatorsAliases: false
+
   }
 
   await db(config).catch(handleFatalError)

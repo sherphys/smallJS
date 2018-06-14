@@ -37,6 +37,16 @@ models/user
 models/scheduleuser
 models/scheduleips
 
+Recuerda instalar los paquetes para desarrollo:
+
+npm i -S sequelize pg pg-hstore
+npm i --save defaults
+npm i sqlite3 --save-dev
+npm i nyc --save-dev
+npm i sinon --save-dev
+npm i --save-dev ava
+
+
 
 
 

@@ -23,7 +23,7 @@ module.exports = function setupUserModel(config) {
     },
 
     // IPS_id
-    IPSid: {
+    ips: {
       type: Sequelize.INTEGER,
       allowNull: false
     },
@@ -31,7 +31,7 @@ module.exports = function setupUserModel(config) {
     // IPS_id secundarias (se puede poner por orden de prioridad)
     // La idea es que sea un objeto JSON pero tipo arreglo
     // Dependiendo de la IPS principal el arreglo podría ser de 2 o más valores
-    IPSidExtra: {
+    ipsExtra: {
       type: Sequelize.JSON,
       allowNull:false
     },

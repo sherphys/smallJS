@@ -14,10 +14,10 @@ module.exports = function setupScheduleIPSModel(config) {
       },
 
       // IPS_id
-      IPSid: {
-        type: Sequelize.INTEGER
+      // IPSid: {
+      //  type: Sequelize.INTEGER
         // allowNull: false
-      },
+      // },
 
       // JSON de las citas [cita1,cita2,cita3,...,citan], cada elemento cita tendría
       // Nivel de la cita: (1 o 2)

@@ -62,3 +62,40 @@
  2011  npm run lint
  2012  npm run setup
  2013  history | grep npm > buscar
+ 1551  sudo -u postgres psql postgres
+ 1871  history | psql
+ 1872  history | grep psql
+ 1873  sudo -u postgres psql postgres
+ 1874  sudo -u postgres psql shersnape
+ 1875  sudo -u shersnape psql init-cevra
+ 1876  sudo -u shersnape psql init-1
+ 1877  psql
+ 1878  sudo -u shersnape psql init-1
+ 1879  sudo -u shersnape psql 
+ 1880  sudo -u psql 
+ 1881  sudo  psql 
+ 1882  sudo -u shersnape -d psql postgres
+ 1883  sudo -u shersnape psql 
+ 1884  sudo -u shersnape -d psql postgres
+ 1885  sudo -u shersnape  psql postgres
+ 1927  psql -U shersnape
+ 1928  psql -U Shersnape
+ 1929  psql 
+ 1932  sudo -u shersnape psql 
+ 1933  psql -u platziverse
+ 1934  psql -u platziverse shersnape
+ 1935  history | psql
+ 1936  history | grep psql
+ 1937  psql -u platziverse shersnape
+ 1938  sudo -u postgres psql postgres
+ 1939  sudo psql -U shersnape
+ 1940  sudo -u postgres psql postgres
+ 1941  psql -U shersnape platziverse
+ 1955  psql -U shersnape platziverse
+ 1956  psql -U shersnape 
+ 1962  psql -U shersnape mydb
+ 1974  psql -U shersnape platziverse
+ 2021  history | grep psql >> buscar
+ 1537  createuser -s -P -e admin
+ 1961  createdb mydb
+ 2022  history | grep create >> buscar
