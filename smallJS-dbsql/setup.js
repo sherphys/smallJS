@@ -1,17 +1,17 @@
 'use strict'
 
 const debug = require('debug')('smallJS:db:setup')
-// const inquirer = require('inquirer')
+const inquirer = require('inquirer')
 const chalk = require('chalk')
-// const minimist = require('minimist')
+const minimist = require('minimist')
 const db = require('./')
-// const args = minimist(process.argv)
-// const prompt = inquirer.createPromptModule()
+const args = minimist(process.argv)
+const prompt = inquirer.createPromptModule()
 
 // La base de datos se crea cada vez que iniciamos el servidor
 
 async function setup() {
-  /* if (!args.yes) {
+  if (!args.yes) {
     const answer = await prompt([
       {
         type: 'confirm',
@@ -23,7 +23,7 @@ async function setup() {
     if (!answer.setup) {
       return console.log('Nothing happened :)')
     }
-  } */
+  }
 
   const config = {
     database: process.env.DB_NAME || 'mydbeps',

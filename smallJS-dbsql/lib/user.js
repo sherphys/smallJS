@@ -1,22 +1,21 @@
 'use strict'
 
-//Función setup del User cuenta con varios métodos
-//1. Creación y actualización
-//2. Encontrar un id
-//3. Encontrar un ccid
-//4. Encontrar un 
-
+// Función setup del User cuenta con varios métodos
+// 1. Creación y actualización
+// 2. Encontrar un id
+// 3. Encontrar un ccid
+// 4. Encontrar a todos
+// 5. Agrupar por tipos
 
 module.exports = function setupUser(UserModel) {
   // Primero vamos a hacer un funcion asincrona para crear o actualizar los datos
   // El usuario existe si existe la condición
-    async function createOrUpdate(user){
+    async function createOrUpdate(user) {
     const cond = {
       where: {
         ccid: user.ccid
       }
     }
-    
     // Luego creamos una variable que nos devuelva si existe o no la condición
     const existingUser   = await UserModel.findOne(cond)
 
@@ -32,16 +31,14 @@ module.exports = function setupUser(UserModel) {
     return result.toJSON()
   }// Fin de async function
 
+  /** **************** Funciones de búsqueda ****************/
 
-
-  /****************** Funciones de búsqueda ****************/
-
-  //Buscar por id (one)
+  // Buscar por id (one)
   function findById(id) {
     return UserModel.findById(id)
   }// Fin de function findById
 
-  //Buscar por ccid (one)
+  // Buscar por ccid (one)
   function findByCCid(ccid) {
     return UserModel.findOne({
       where: {
@@ -50,64 +47,59 @@ module.exports = function setupUser(UserModel) {
     })
   }// Fin de funtion findByCCid
 
-  //Buscar por IPS (any) 
-  function findByIPS(ips) {
+  // Bucar a todos (all)
+  /* function findAll() {
+    return UserModel.findAll()
+  }
+
+  function findConnected () {
     return UserModel.findAll({
       where: {
-        ips:ips
+        connected: true
       }
     })
-  }// Fin de function findByIPS
+  } */
 
-  function notlocate(ips) {
-    
-     // Primero definimos una condición de existencia del id
-     // Luego si el usuario está allocado
-     const condips = {
-      where: { ips: user.ips }
-      const allocationUser = await UserModel.findOne(condips)
+  function findGroup(property, value) {
+    let result
+
+    switch (property) {
+      case 'type':
+        console.log('Type')
+        result = UserModel.findAll({
+          where: {
+            type: value
+          }
+        })
+        break
+      case 'connected':
+        console.log('Connected')
+        result = UserModel.findAll({
+          where: {
+            connected: value
+          }
+        })
+        break
+      case 'pid':
+        console.log('Pid')
+        result = UserModel.findAll({
+        where: {
+          pid: value
+        }
+      })
+        break
+      default:
+        console.log('Default')
+        result = UserModel.findAll()
+        break
     }
-
-    return UserModel.findOne({
-      where: {
-        ips:ips
-      }
-    })
-  }// Fin de function findById*/
-
-
-  function findAll () {
-    return AgentModel.findAll()
+    return result
   }
-
-  /*
-  function findConnected () {
-    return AgentModel.findAll({
-      where: {
-        connected: true
-      }
-    })
-  }
-  */
-
-  /*
-  function findByUsername (username) {
-    return AgentModel.findAll({
-      where: {
-        username,
-        connected: true
-      }
-    })
-  }
-  */
 
   return {
     createOrUpdate,
     findById,
     findByCCid,
-    findByIPS
-    // findAll,
-    // findConnected,
-    // findByUsername
+    findGroup
   }
 }

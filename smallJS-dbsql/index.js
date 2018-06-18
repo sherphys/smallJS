@@ -1,8 +1,7 @@
 'use stritc'
 const setupDatabase = require('./lib/db')
 const setupUserModel = require('./models/user')
-const setupScheduleIPSModel = require('./models/scheduleips')
-const setupScheduleUserModel = require('./models/scheduleuser')
+const setupAppointmentModel = require('./models/appointment')
 const defaults = require('defaults')
 
 const setupUser = require('./lib/user')
@@ -23,14 +22,12 @@ module.exports = async function(config) {
   })
 
   const sequelize = setupDatabase(config)
+
   const UserModel = setupUserModel(config)
-  const ScheduleIPSModel = setupScheduleIPSModel(config)
-  const ScheduleUserModel = setupScheduleUserModel(config)
+  const AppointmentModel = setupAppointmentModel(config)
 
-  UserModel.hasMany(ScheduleUserModel)
-  ScheduleUserModel.belongsTo(UserModel)
-
-  ScheduleIPSModel.belongsTo(UserModel, {as: 'ips'})
+  UserModel.hasMany(AppointmentModel)
+  AppointmentModel.belongsTo(UserModel)
 
   await sequelize.authenticate()
 
@@ -38,7 +35,7 @@ module.exports = async function(config) {
     await sequelize.sync({ force: true })
   }
 
-  const User = setupUser(UserModel)
+  const User =  setupUser(UserModel)
   const ScheduleUser = {}
   const ScheduleIPS = {}
   return {

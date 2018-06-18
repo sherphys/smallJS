@@ -1,28 +1,35 @@
 'use strict'
 
 const user = {
-  flags:true,
+  type: 'customer',
   id: 1,
   ccid: 10,
-  ips: 1,
-  ipsExtra: JSON.parse('[2, 3]'),
-  firstname: 'Sheryl',
-  lastname: 'Avendaño',
+  name: 'Sheryl Avendano',
   username: 'Shers',
   password: 'ajayque',
   hostname: 'test-host',
   pid: 1,
   connected: true,
   createdAt: new Date(),
-  updatedAt: new Date(),
-  operatorsAliases: false
+  updatedAt: new Date()
+  // operatorsAliases: false
+}
+
+const usertemplete = {
+  name: 'Sheryl Avendano',
+  username: 'Shers',
+  password: 'ajayque',
+  hostname: 'test-host',
+  createdAt: new Date(),
+  updatedAt: new Date()
+  // operatorsAliases: false
 }
 
 const users = [
   user,
-  extend(user, { id: 2, ips:1, ccid: 108827292, connected: false, username: 'test' }),
-  extend(user, { id: 3, ips:1, ccid: 298303393 }),
-  extend(user, { id: 4, ips:1, ccid: 102939232, username: 'test' })
+  extend(usertemplete, { type: 'customer', id: 2, ccid: 11, connected: false }),
+  extend(usertemplete, { type: 'doctor',   id: 3, ccid: 12, connected: true  }),
+  extend(usertemplete, { type: 'doctor',   id: 4, ccid: 13, connected: false })
 ]
 
 function extend(obj, values) {
@@ -35,7 +42,7 @@ module.exports = {
   all: users,
   connected: users.filter(a => a.connected),
   Shers: users.filter(a => a.username === 'Shers'),
+  types: id => users.filter(a => a.type === id),
   byCCid: id => users.filter(a => a.ccid === id).shift(),
-  byId: id => users.filter(a => a.id === id).shift(),
-  byIPS: id => users.filter(a => a.ips === id).shift()
+  byId: id => users.filter(a => a.id === id).shift()
 }

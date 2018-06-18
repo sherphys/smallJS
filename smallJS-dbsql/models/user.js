@@ -10,32 +10,17 @@ module.exports = function setupUserModel(config) {
 
     /* PRIMERO IDENTIFICAMOS AL USER COMPLETAMENTE DENTRO DE NUESTRO SISTEMA */
 
-    // User is admin?
-    flag: {
-      type: Sequelize.BOOLEAN,
+    // User is admin, doctor, customer?
+    type: {
+      type: Sequelize.STRING,
       allowNull: false,
-      defaultValue: false 
+      defaultValue: 'customer'
     },
 
     // Nuestro propio id usando documento de identidad
     ccid: {
       type: Sequelize.INTEGER,
       allowNull: false
-    },
-
-    // IPS_id
-    ips: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      defaultValue: 0
-    },
-
-    // IPS_id secundarias (se puede poner por orden de prioridad)
-    // La idea es que sea un objeto JSON pero tipo arreglo
-    // Dependiendo de la IPS principal el arreglo podría ser de 2 o más valores
-    ipsExtra: {
-      type: Sequelize.JSON,
-      defaultValue: JSON.parse('0')
     },
 
     /* OTRA INFORMACIÓN DEL USER PENSANDO EN UN ACCESO DIRECTO */
@@ -53,13 +38,7 @@ module.exports = function setupUserModel(config) {
     },
 
     // Nombre
-    firstname: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
-
-    // Apellido
-    lastname: {
+    name: {
       type: Sequelize.STRING,
       allowNull: false
     },
@@ -76,6 +55,7 @@ module.exports = function setupUserModel(config) {
     // 1-> Crear
     // 2-> Modificar
     // 3-> Cancelar
+    // 4-> Cerrar
     pid: {
       type: Sequelize.INTEGER,
       allowNull: false,
