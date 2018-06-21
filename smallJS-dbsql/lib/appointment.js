@@ -2,16 +2,30 @@
 
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
-let result
 module.exports = function setupAppointment(AppointmentModel, UserModel) {
     // Primero vamos a hacer un funcion asincrona para crear o actualizar los datos
     // La vamos asignar a un usuario específico.
-      async function create(ccid, appointment) {
+    async function createOrUpdate(ccid, appointment) {
       const user = await UserModel.findOne({
         where: {ccid}
       })
-      // Existe y es un doctor?
-      if (user && user.type === 'doctor') {
+      const existingAppointmentBelongtoUser   = await AppointmentModel.findOne({
+        where: {
+          id:appointment.id,
+          userId:user.id
+        }
+      })
+      const condCreatingAndUpdate = (appointment.assignedid === 0) && (appointment.assignedname === '')
+      && (appointment.state === 1) && (user.type === 'doctor')
+
+      // Si la cita ya existe, se actualiza
+      if (existingAppointmentBelongtoUser && condCreatingAndUpdate) {
+        const updated = await AppointmentModel.update(appointment, {id:appointment.id})
+        return updated ? AppointmentModel.findById(appointment.id) : existingAppointmentBelongtoUser
+      }
+
+      // El usuario existe, es un doctor y ha diligencciado correctamente la cita
+      if (condCreatingAndUpdate) {
         Object.assign(appointment, { userId: user.id })
         const result = await AppointmentModel.create(appointment)
         return result.toJSON()
@@ -34,143 +48,70 @@ module.exports = function setupAppointment(AppointmentModel, UserModel) {
 
     // O las citas por días no asignadas con alguna condición más
     async function findNoAssignedByGroup(property, value, dayinit, dayend) {
+      let query = {
+        where: {
+          day:{
+            [Op.lt]: dayinit,
+            [Op.gt]: dayend
+          },
+          state:1
+        }
+      }
+
       switch (property) {
         case 'type':
           console.log('Type')
-          result = AppointmentModel.findAll({
-            where: {
-              day:{
-                [Op.lt]: dayinit,
-                [Op.gt]: dayend
-              },
-              type: value,
-              state:1
-            }
-          })
+          query.where.type = value
           break
         case 'doctorname':
           console.log('doctorname')
-          result = AppointmentModel.findAll({
-            where: {
-              day:{
-                [Op.lt]: dayinit,
-                [Op.gt]: dayend
-              },
-              doctorname:value,
-              state:1
-            }
-          })
+          query.where.doctorname = value
           break
         case 'branch':
           console.log('branch')
-          result = AppointmentModel.findAll({
-            where: {
-              day:{
-                [Op.lt]: dayinit,
-                [Op.gt]: dayend
-              },
-              branch:value,
-              state:1
-            }
-          })
+          query.where.branch = value
           break
         default:
           console.log('Default')
-          result = AppointmentModel.findAll()
+          query = null
           break
       }
-      return result
+      return AppointmentModel.findAll(query)
     }// Fin de async function findNoAssignedByGroup
 
     // O las citas por día sin importar la asignación con alguna condición más
     async function findByDayGroup(property, value, dayinit, dayend) {
-      switch (property) {
-        case 'type':
-          console.log('Type')
-          result = AppointmentModel.findAll({
-            where: {
-              day:{
-                [Op.lt]: dayinit,
-                [Op.gt]: dayend
-              },
-              type: value
-            }
-          })
-          break
-        case 'doctorname':
-          console.log('doctorname')
-          result = AppointmentModel.findAll({
-            where: {
-              day:{
-                [Op.lt]: dayinit,
-                [Op.gt]: dayend
-              },
-              doctorname:value
-            }
-          })
-          break
-        case 'branch':
-          console.log('branch')
-          result = AppointmentModel.findAll({
-            where: {
-              day:{
-                [Op.lt]: dayinit,
-                [Op.gt]: dayend
-              },
-              branch:value
-            }
-          })
-          break
-        default:
-          console.log('Default')
-          result = AppointmentModel.findAll()
-          break
-      }
-      return result
-    }
-
-    async function assignedAndUpdate(appointment, user) {
-      const condUser = {
+      let query = {
         where: {
-          ccid: user.ccid,
-          type: 'customer'
-        }
-      }
-      // Luego creamos una variable que nos devuelva si existe ese usuario como cliente
-      const existingUser   = await UserModel.findOne(condUser)
-      // Existe y es un cliente
-      if (existingUser) {
-        const updated = await AppointmentModel.update(appointment, { assignedid: user.id , assignedname:user.name,assigned:2})
-        return updated ? AppointmentModel.findOne(where:{ assignedid: user.id }) : existingUser
-      }
-      //Aquí hay que poner algo por si no se actualiza. 
-    }// Fin de async function create
-
-    async function canceledAndUpdate(appointment,user) {
-      const condUser = {
-        where: {
-          ccid: user.ccid,
-          type: {
-            [Op.or]:{
-              [Op.eq]:'customer'
-              [Op.eq]:'admin'
-            }
+          day:{
+            [Op.lt]: dayinit,
+            [Op.gt]: dayend
           }
         }
       }
-      // Luego creamos una variable que nos devuelva si existe ese usuario como cliente
-      const existingUser   = await UserModel.findOne(condUser)
-      // Existe y es un cliente
-      if (existingUser && appointment.assigned===2) {
-        if (user.type==='customer' && appointment.assignedid===user.id || user.type==='admin'){
-          const updated = await AppointmentModel.update(appointment, { assignedid:'', assignedname:'',assigned:1})
-        }
-        return updated ? AppointmentModel.findOne(where:{ assignedid: user.id })  : existingUser
-      }
-      //Aquí hay que poner algo por si no se actualiza. 
-    }// Fin de async function create
+      switch (property) {
+        case 'type':
+          console.log('Type')
+          query.where.type = value
+          break
 
-    async function UpdateNoAsigned(ccid, appointment) {
+        case 'doctorname':
+          console.log('doctorname')
+          query.where.doctorname = value
+          break
+        case 'branch':
+          console.log('branch')
+          query.where.branch = value
+          break
+        default:
+          console.log('Default')
+          query = null
+          break
+      }
+      return AppointmentModel.findAll(query)
+    }
+
+    async function assignedAndUpdate(ccid, id) {
       const condUser = {
         where: {
           ccid: ccid,
@@ -178,83 +119,96 @@ module.exports = function setupAppointment(AppointmentModel, UserModel) {
         }
       }
       // Luego creamos una variable que nos devuelva si existe ese usuario como cliente
-      const existingUser   = await UserModel.findOne(condUser)
+      const user   = await UserModel.findOne(condUser)
+      // Probar que existe la cita
+      const appointment   = await AppointmentModel.findById(id)
+      // o por el id de la cita, para ese usamos findId
       // Existe y es un cliente
-      if (existingUser) {
-        const updated = await AppointmentModel.update(appointment, { assignedid: user.id , assignedname:user.name,assigned:2})
-        return updated ? UserModel.findOne(condUser) : existingUser
+
+      console.log()
+
+      if (user && appointment) {
+        const updated = await AppointmentModel.update(appointment, {assignedid: ccid, assignedname: user.name, state:2})
+        return updated ? AppointmentModel.findById(appointment.id) : appointment
       }
-      //Aquí hay que poner algo por si no se actualiza. 
+
+      return appointment
+      // Aquí hay que poner algo por si no se actualiza.
     }// Fin de async function create
 
+    async function canceledAndUpdate(ccid, appointment) {
+      const condUser = {
+        where: {
+          ccid: ccid,
+          type: {
+            [Op.or]:{
+              [Op.eq]:'customer',
+              [Op.eq]:'admin'
+            }
+          }
+        }
+      }
+      // Luego creamos una variable que nos devuelva si existe ese usuario como cliente
+      const user   = await UserModel.findOne(condUser)
+       // Probar que existe la cita
+      const existingAppointment   = await AppointmentModel.findById(appointment.id)
+      // o por el id de la cita, para ese usamos findId
+      // Existe y es un cliente
+      if (user && appointment.assigned === 2) {
+        if (user.type === 'customer' && appointment.assignedid === user.ccid || user.type === 'admin') {
+          const updated = await AppointmentModel.update(appointment, {
+            assignedid:'', assignedname:'', state:1
+          })
+          return updated ? AppointmentModel.findOne(appointment.id) : existingAppointment
+        }
+      }
+      // Aquí hay que poner algo por si no se actualiza.
+    }// Fin de async function create
 
-    /** **************** Funciones de búsqueda ****************/
+    /** **************** Funciones de búsqueda normal ****************/
 
     // Buscar por id (one)
     function findById(id) {
-      return UserModel.findById(id)
+      return AppointmentModel.findById(id)
     }// Fin de function findById
 
-    // Buscar por ccid (one)
-    function findByCCid(ccid) {
-      return UserModel.findOne({
+    // Buscar por ccidAssigned (one)
+    async function findByCCid(ccid) {
+      const user = await AppointmentModel.findOne({
+        where: {ccid}
+      })
+      return AppointmentModel.findAll({
         where: {
-          ccid: ccid
+          userId: user.id
         }
       })
     }// Fin de funtion findByCCid
 
-    // Bucar a todos (all)
-    function findAll() {
-      return UserModel.findAll()
-    }
-
-    function findConnected() {
-      return UserModel.findAll({
+    async function findByCCidDate(ccid, dayinit, dayend) {
+      const user = await UserModel.findOne({
+        where: {ccid}
+      })
+      return AppointmentModel.findAll({
         where: {
-          connected: true
+          userId: user.id,
+          day:{
+            [Op.lt]: dayinit,
+            [Op.gt]: dayend
+          }
         }
       })
-    }
-
-    function findGroup(property, value) {
-      let result
-
-      switch (property) {
-        case 'type':
-          console.log('Type')
-          result = UserModel.findAll({
-            where: {
-              type: value
-            }
-          })
-          break
-        case 'connected':
-          console.log('Connected')
-          result = UserModel.findAll({
-            where: {
-              connected: value
-            }
-          })
-          break
-        case 'pid':
-          console.log('Pid')
-          result = UserModel.findAll({
-          where: {
-            pid: value
-          }
-        })
-          break
-        default:
-          console.log('Default')
-          result = UserModel.findAll()
-          break
-      }
-      return result
-    }
+    }// Fin de funtion findByCCid
 
     return {
-      create
+      createOrUpdate,
+      findNoAssignedByDate,
+      findByCCidDate,
+      findNoAssignedByGroup,
+      findByDayGroup,
+      findByCCid,
+      findById,
+      assignedAndUpdate,
+      canceledAndUpdate
     }
   }
 

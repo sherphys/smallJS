@@ -27,9 +27,15 @@ const usertemplete = {
 
 const users = [
   user,
-  extend(usertemplete, { type: 'customer', id: 2, ccid: 11, connected: false }),
-  extend(usertemplete, { type: 'doctor',   id: 3, ccid: 12, connected: true  }),
-  extend(usertemplete, { type: 'doctor',   id: 4, ccid: 13, connected: false })
+  extend(usertemplete, {
+     type: 'customer', id: 2, ccid: 11, connected: false
+    }),
+  extend(usertemplete, {
+     type: 'doctor',   id: 3, ccid: 12, connected: true
+    }),
+  extend(usertemplete, {
+     type: 'doctor',   id: 4, ccid: 13, connected: false
+    })
 ]
 
 function extend(obj, values) {
@@ -42,7 +48,7 @@ module.exports = {
   all: users,
   connected: users.filter(a => a.connected),
   Shers: users.filter(a => a.username === 'Shers'),
-  types: id => users.filter(a => a.type === id),
+  type: id => users.filter(a => a.type === id),
   byCCid: id => users.filter(a => a.ccid === id).shift(),
   byId: id => users.filter(a => a.id === id).shift()
 }

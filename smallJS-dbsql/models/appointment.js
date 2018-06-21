@@ -15,13 +15,13 @@ module.exports = function setupAppointmentModel(config) {
     },
 
     // Hour init?
-    timeinit: {
+    hourinit: {
       type: Sequelize.TIME,
       allowNull: false
     },
 
     // Hour finish?
-    timeend: {
+    hourend: {
         type: Sequelize.TIME,
         allowNull: false
     },
@@ -50,7 +50,8 @@ module.exports = function setupAppointmentModel(config) {
     // 3 --> Cerrada
     state:{
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 1
     },
 
     // Asignada a:

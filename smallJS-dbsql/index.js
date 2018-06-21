@@ -5,8 +5,7 @@ const setupAppointmentModel = require('./models/appointment')
 const defaults = require('defaults')
 
 const setupUser = require('./lib/user')
-// const setupScheduleIPSModel = require('./models/scheduleips')
-// const setupScheduleUserModel = require('./models/scheduleuser')
+const setupAppointment = require('./lib/appointment')
 
 module.exports = async function(config) {
   config = defaults(config, {
@@ -36,12 +35,10 @@ module.exports = async function(config) {
   }
 
   const User =  setupUser(UserModel)
-  const ScheduleUser = {}
-  const ScheduleIPS = {}
+  const Appointment = setupAppointment(AppointmentModel, UserModel)
   return {
     User,
-    ScheduleUser,
-    ScheduleIPS
+    Appointment
   }
 }
 

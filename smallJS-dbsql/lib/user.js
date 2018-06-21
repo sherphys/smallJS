@@ -1,5 +1,8 @@
 'use strict'
 
+// const Sequelize = require('sequelize')
+// const Op = Sequelize.Op
+
 // Función setup del User cuenta con varios métodos
 // 1. Creación y actualización
 // 2. Encontrar un id
@@ -8,14 +11,14 @@
 // 5. Agrupar por tipos
 
 module.exports = function setupUser(UserModel) {
-  // Primero vamos a hacer un funcion asincrona para crear o actualizar los datos
-  // El usuario existe si existe la condición
-    async function createOrUpdate(user) {
+  async function createOrUpdate(user) {
     const cond = {
       where: {
         ccid: user.ccid
       }
     }
+     // Primero vamos a hacer un funcion asincrona para crear o actualizar los datos
+    // El usuario existe si existe la condición
     // Luego creamos una variable que nos devuelva si existe o no la condición
     const existingUser   = await UserModel.findOne(cond)
 

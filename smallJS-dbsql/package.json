@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "standart --fix",
     "setup": "DEBUG=smallJS:* node setup.js",
-    "test": "DEBUG=platziverse:* nyc --reporter=lcov ava tests/ --verbose"
+    "testapp": "DEBUG=platziverse:* nyc --reporter=lcov ava tests/appointment-tests.js --verbose",
+    "testuser": "DEBUG=platziverse:* nyc --reporter=lcov ava tests/user-tests.js --verbose"
   },
   "repository": {
     "type": "git",
