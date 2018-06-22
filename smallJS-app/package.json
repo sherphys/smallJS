@@ -1,0 +1,32 @@
+{
+  "name": "smalljs-app",
+  "version": "1.0.0",
+  "description": "API for problem",
+  "main": "index.js",
+  "scripts": {
+    "lint": "standart --fix",
+    "start": "NODE_ENV=production node server.js",
+    "start-dev": "DEBUG=platziverse:* nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sherphys/smallJS.git"
+  },
+  "author": "Sheryl Avendaño",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sherphys/smallJS/issues"
+  },
+  "homepage": "https://github.com/sherphys/smallJS#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "express-asyncify": "^1.0.0",
+    "express-jwt": "^5.3.1",
+    "express-jwt-permissions": "^1.2.1",
+    "nodemon": "^1.17.5"
+  },
+  "devDependencies": {
+    "standart": "^6.1.0"
+  }
+}

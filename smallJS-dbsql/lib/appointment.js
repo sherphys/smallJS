@@ -111,7 +111,7 @@ module.exports = function setupAppointment(AppointmentModel, UserModel) {
       return AppointmentModel.findAll(query)
     }
 
-    async function assignedAndUpdate(ccid, id) {
+    async function assignedAndUpdate(ccid, appointment) {
       const condUser = {
         where: {
           ccid: ccid,
@@ -121,14 +121,12 @@ module.exports = function setupAppointment(AppointmentModel, UserModel) {
       // Luego creamos una variable que nos devuelva si existe ese usuario como cliente
       const user   = await UserModel.findOne(condUser)
       // Probar que existe la cita
-      const appointment   = await AppointmentModel.findById(id)
+      const existingAppointment   = await AppointmentModel.findById(appointment.id)
       // o por el id de la cita, para ese usamos findId
       // Existe y es un cliente
 
-      console.log()
-
-      if (user && appointment) {
-        const updated = await AppointmentModel.update(appointment, {assignedid: ccid, assignedname: user.name, state:2})
+      if (user && existingAppointment) {
+        const updated = await AppointmentModel.update(appointment, {id:appointment.id, userId:appointment.UserId, assignedid: user.ccid, assignedname: user.name, state:2})
         return updated ? AppointmentModel.findById(appointment.id) : appointment
       }
 

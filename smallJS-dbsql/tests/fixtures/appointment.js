@@ -67,6 +67,23 @@ const appointment = {
   // operatorsAliases: false
 }
 
+const appointmentup = {
+  id:2,
+  userId:2,
+  day: '2018-06-21',
+  hourinit: '9:00',
+  hourend:  '10:00',
+  doctorname: 'Pepito Pérez',
+  type: 'General',
+  branch:1,
+  state:2,
+  assignedid:user1.ccid,
+  assignedname:user1.name,
+  createdAt: new Date(),
+  updatedAt: new Date()
+  // operatorsAliases: false
+}
+
 const templete = {
   userId:2,
   doctorname: 'Pepito Pérez',
@@ -82,6 +99,7 @@ const templete = {
 
 const appointments = [
   appointment,
+  appointmentup,
   extend(templete, {
     id:2,
     day: '2018-06-21',
@@ -108,11 +126,11 @@ function extend(obj, values) {
 }
 
 module.exports = {
-  extend,
   user:user1,
   docuser:user2,
   oneapp: appointment,
   allapp: appointments,
+  upapp: appointmentup,
   byId: id => appointments.filter(a => a.id === id).shift(),
   byCCid: id => users.filter(a => a.ccid === id).shift(),
   byCCidCustomer: (id) => users.filter(a => (a.ccid === id) && (a.type === 'customer')),
@@ -120,4 +138,5 @@ module.exports = {
   byrel: (id, userid) => appointments.filter(a => (a.id === id) && (a.userId === userid)),
   bydays: (day1, day2) => appointments.filter(a => (a.day >= day1) && (a.day <= day2) && (a.state === 1))
   // byId: id => users.filter(a => a.id === id).shift()
+  // byextend: assign => extend(appointment,assign)
 }

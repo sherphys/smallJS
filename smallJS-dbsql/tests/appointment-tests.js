@@ -20,15 +20,14 @@ let sandbox = null
 let customer = Object.assign({}, appointmentFixtures.user)
 let doctor = Object.assign({}, appointmentFixtures.docuser)
 let oneAppointment = Object.assign({}, appointmentFixtures.oneapp)
+let changeAppointment = Object.assign({}, appointmentFixtures.upapp)
+let canceledAppointment = Object.assign({}, appointmentFixtures.allapp[1])
 
 let appointmentid = oneAppointment.id
 let userid = doctor.id
 let ccid = doctor.ccid
 
 let ccidchange = customer.ccid
-let appointmentchange = oneAppointment.id
-
-  //Object.assign({}, oneAppointment)
 
 let vArgs = {
   where:{
@@ -42,6 +41,13 @@ let ccidArgs = {
 }
 
 let ccidArgsCustomer = {
+  where: {
+    ccid:ccidchange,
+    type:'customer'
+  }
+}
+
+let ccidArgsCustomerOrAdmin = {
   where: {
     ccid:ccidchange,
     type:'customer'
@@ -81,8 +87,7 @@ let daysArgs = {
   }
 }
 
-let assign = {assignedid: customer.ccid, assignedname: customer.name, state:2}
-let changeAppointment = Object.assign({}, oneAppointment)
+// let changeAppointment = appointmentFixtures.extend(oneAppointment,assign)
 
 test.beforeEach(async () => {
   sandbox = sinon.createSandbox()
@@ -103,12 +108,11 @@ test.beforeEach(async () => {
 
   AppointmentStub.update = sandbox.stub()
   AppointmentStub.update.withArgs(oneAppointment).returns(Promise.resolve(oneAppointment))
-  AppointmentStub.update.withArgs(changeAppointment, assign).returns(Promise.resolve(appointmentFixtures.extend(changeAppointment,
-   assign)))
+  AppointmentStub.update.withArgs(changeAppointment).returns(Promise.resolve(changeAppointment))
 
   AppointmentStub.findById = sandbox.stub()
   AppointmentStub.findById.withArgs(oneAppointment.id).returns(Promise.resolve(appointmentFixtures.byId(oneAppointment.id)))
-  AppointmentStub.findById.withArgs(appointmentchange).returns(Promise.resolve(appointmentFixtures.byId(appointmentchange)))
+  AppointmentStub.findById.withArgs(changeAppointment.id).returns(Promise.resolve(appointmentFixtures.byId(changeAppointment.id)))
   // Model findOne Stub (with ccid)
 
   AppointmentStub.findOne = sandbox.stub()
@@ -119,6 +123,8 @@ test.beforeEach(async () => {
   UserStub.findOne = sandbox.stub()
   UserStub.findOne.withArgs(ccidArgs).returns(Promise.resolve(appointmentFixtures.byCCid(ccid)))
   UserStub.findOne.withArgs(ccidArgsCustomer).returns(Promise.resolve(appointmentFixtures.byCCidCustomer(ccidchange)))
+  UserStub.findOne.withArgs(ccidArgsCustomerOrAdmin).returns(Promise.resolve(appointmentFixtures.byCCidCustomerOrAdmin(ccidchange)))
+
 
   AppointmentStub.findAll = sandbox.stub()
   AppointmentStub.findAll.withArgs(daysArgs).returns(Promise.resolve(appointmentFixtures.bydays(dayinit, dayend)))
@@ -218,25 +224,49 @@ test.serial('Appointment#findNoAssignedByDate', async t => {
 })
 
 test.serial('Appointmet#AssignedAndUpdate - exist - user - customer', async t => {
-  let appointmentup = await db.Appointment.assignedAndUpdate(ccidchange, appointmentchange)
+  let appointment = await db.Appointment.assignedAndUpdate(ccidchange, canceledAppointment)
 
   // Primero buscamos el usuario
   t.true(UserStub.findOne.called, 'findOne (user) should be called on model')
   t.true(UserStub.findOne.calledOnce, 'findOne (user) should be called twice')
-  t.true(UserStub.findOne.calledWith(ccidArgsCustomer), 'findOne (user) should be called with ccid args')
+  t.true(UserStub.findOne.calledWith(ccidArgsCustomerOrAdmin), 'findOne (user) should be called with ccid args')
 
   // Volvemos a buscarlas por el id
   t.true(AppointmentStub.findById.called, 'findById (appoint) should be called on model')
   t.true(AppointmentStub.findById.calledTwice, 'findById (appoint) should be called twice')
-  t.true(AppointmentStub.findById.calledWith(appointmentchange), 'findById (appoint) should be called with vargs')
+  t.true(AppointmentStub.findById.calledWith(changeAppointment.id), 'findById (appoint) should be called with vargs')
 
-  console.log('El total de los usuario es: ' +  JSON.stringify(appointmentFixtures.extend(oneAppointment,
-    assign)) + '\n\n')
+  // console.log('El total de los usuario es: ' +  JSON.stringify(appointmentFixtures.extend(oneAppointment,
+  //  assign)) + '\n\n')
 
   // Al encontrarla, la actualizamos
   t.true(AppointmentStub.update.called, 'appointment.update called on model')
   t.true(AppointmentStub.update.calledOnce, 'appointment.update should be called once')
   t.true(AppointmentStub.update.calledWith(changeAppointment), 'appointment.update should be called with specified args')
 
-  //t.deepEqual(appointmentup, appointmentFixtures.extend(oneAppointment, assign), 'appointment should be the same')
+  t.deepEqual(appointment, changeAppointment, 'appointment should be the same')
+})
+
+test.serial('Appointmet#CanceledAndUpdate - exist - user/admin - customer', async t => {
+  let appointment = await db.Appointment.assignedAndUpdate(ccidchange, canceledAppointment)
+
+  // Primero buscamos el usuario
+  t.true(UserStub.findOne.called, 'findOne (user) should be called on model')
+  t.true(UserStub.findOne.calledOnce, 'findOne (user) should be called twice')
+  t.true(UserStub.findOne.calledWith(ccidArgsCustomerOrAdmin), 'findOne (user) should be called with ccid args')
+
+  // Volvemos a buscarlas por el id
+  t.true(AppointmentStub.findById.called, 'findById (appoint) should be called on model')
+  t.true(AppointmentStub.findById.calledTwice, 'findById (appoint) should be called twice')
+  t.true(AppointmentStub.findById.calledWith(canceledAppointment.id), 'findById (appoint) should be called with vargs')
+
+  // console.log('El total de los usuario es: ' +  JSON.stringify(appointmentFixtures.extend(oneAppointment,
+  //  assign)) + '\n\n')
+
+  // Al encontrarla, la actualizamos
+  t.true(AppointmentStub.update.called, 'appointment.update called on model')
+  t.true(AppointmentStub.update.calledOnce, 'appointment.update should be called once')
+  t.true(AppointmentStub.update.calledWith(canceledAppointment), 'appointment.update should be called with specified args')
+
+  t.deepEqual(appointment, canceledAppointment, 'appointment should be the same')
 })
