@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Asignación de citas IPS XXX</title>
+  </head>
+<body>
+<h1>Login IPS XXX (USERS) </h1>
+<form>
+  <button name="new"   id='new'>Nuevo Usuario</button><br>               
+  <br>
+  Tipo de Usuario
+  <select name="type" id="type">
+    <option value="customer">Cliente</option>
+    <option value="admin">Administrador</option>
+    <option value="doctor">Doctor</option>
+  </select><br>
+  <input type="text" name="ccid" id="ccid" placeholder="Cédula..." required><br>
+  <input type="text" name="password" id="pass" placeholder="Contraseña..." required><br>
+  <button name="login" id='login'>Iniciar sesión</button>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="/public/js/login.js"></script>
+</form>
+</body>
+</html>

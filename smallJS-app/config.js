@@ -10,12 +10,11 @@ module.exports = {
     host: process.env.DB_HOST || 'localhost',
     dialect: 'postgres',
     logging: s => debug(s),
-    //setup: true,
+    setup: process.env.DB_SETUP || false,
     operatorsAliases: false
   },
   auth: {
     secret: process.env.SECRET || 'itachi'
   }
 }
-
 

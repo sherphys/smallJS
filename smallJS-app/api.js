@@ -12,17 +12,18 @@ const config = require('./config')
 const api = asyncify(express.Router())
 let services, User, Appointment
 
+api.use('/public', express.static(__dirname + '/public'))
+
 api.use(bodyParser.urlencoded({ extended: true }))
-api.use(express.json());       // to support JSON-encoded bodies
-//api.use(express.urlencoded()); // to support URL-encoded bodies
+api.use(express.json())       // to support JSON-encoded bodies
+// api.use(express.urlencoded()); // to support URL-encoded bodies
 
 api.use('*', async (req, res, next) => {
   if (!services) {
     debug('Connecting to database')
     try {
       services = await db(config.db)
-    } 
-    catch (error) {
+    }     catch (error) {
       return next(error)
     }
 
@@ -32,28 +33,65 @@ api.use('*', async (req, res, next) => {
   next()
 })
 
-api.get("/", (req, res) => {
-  if(services) res.redirect('/admin')
-  else res.status(400).send("¡Problemas con la DB")
+api.get('/', (req, res) => {
+  if (services) res.sendFile('/public/html/login.html', {root : __dirname})
+  else res.status(500).send('¡Problemas con la DB!')
  })
 
-api.get("/admin", (req, res) => {
-  if(!User.findById(1)) res.sendFile('public/index1.html' , { root : __dirname})
-  else res.sendFile('public/index2.html' , { root : __dirname})
- })
-
- api.post("/admin/0", async (req, res) => {
-  let clone =Object.assign({}, req.body)
-  let completeInfo =  Object.assign(clone,{type:'admin', hostname: 'test-host', pid: 1, connected: true})
-  let Admin = await User.createOrUpdate(completeInfo).then(item => { 
-    res.sendFile('public/index2.html' , { root : __dirname})
-  }).catch(err => {
-    res.status(400).send("No, no se pudo guardar la información")
+api.post('/register', async (req, res) => {
+  let clone = Object.assign({}, req.body)
+  let completeInfo =  Object.assign(clone, {hostname: 'test-host', pid: 1, connected: true})
+  let userExisting = await User.findByCCid(clone.ccid).catch(err => {
+    console.log(err.stack)
+    res.status(500)
   })
- })
 
- api.get("/doctors", (req, res) => {
-  res.sendFile('public/index.html' , { root : __dirname})
+  if (userExisting) {
+    res.status(400).send('El usuario ya está registrado en el sistema. Inicie sesión'); 
+  }
+  else{
+    let user = await User.createOrUpdate(completeInfo).catch(err => {
+    console.log(err.stack)
+    res.status(500).send('No, no se pudo guardar la información')
+    })
+    
+    res.status(200).send(JSON.stringify(user))
+  }
+})
+
+api.post('/redir', async (req, res) => {
+  let clone = Object.assign({}, req.body)
+  // La información puede ser revisada
+  let user = await User.findByCCid(clone.ccid).catch(err => {
+    console.log(err.stack)
+    res.status(500)
+  })
+  if (user.type === clone.type && user.password === clone.password)  {
+    res.status(200).send(JSON.stringify(user))
+  }    else {
+    res.status(500)
+  }
+})
+
+/* api.post('/doctors', async (req, res) => {
+  let clone = Object.assign({}, req.body)
+  switch(clone.type){
+  let completeInfo =  Object.assign(clone, {assignedid:0, assignedname:'', state:1})
+  let appointment = await Appointment.createOrUpdate(completeInfo).catch(err => {
+    console.log(err.stack)
+    res.status(400).send('No, no se pudo guardar la información')
+  })
+  res.redirect('/appointment')
+ }) */
+
+ api.post('/appoitment', async (req, res) => {
+  let clone = Object.assign({}, req.body)
+  let completeInfo =  Object.assign(clone, {assignedid:0, assignedname:'', state:1})
+  let appointment = await Appointment.createOrUpdate(completeInfo).catch(err => {
+    console.log(err.stack)
+    res.status(400).send('No, no se pudo guardar la información')
+  })
+  res.redirect('/appointment')
  })
 
  /*
@@ -62,16 +100,13 @@ api.get("/admin", (req, res) => {
  pid: 1,
  connected: true,
  createdAt: new Date(),
- updatedAt: new Date()*/
+ updatedAt: new Date() */
 
 // app.use(express.static('public'));
 // Lo que hacemos aquí es pedir un archivo importante: la base de datos
 
-
-
-
 // /////VAMOS A HACER LA PRIMERA SOLICITUD
-/*api.get('/user', auth(config.auth), async (req, res, next) => {
+/* api.get('/user', auth(config.auth), async (req, res, next) => {
     debug('A request has come to /user')
     const { user } = req
     if (!user || !user.username) {

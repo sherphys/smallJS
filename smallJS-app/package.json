@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "standart --fix",
-    "start": "NODE_ENV=production node server.js",
+    "start": "NODE_ENV=production node server.js $DB_SETUP",
     "start-dev": "DEBUG=platziverse:* nodemon server.js"
   },
   "repository": {

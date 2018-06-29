@@ -22,7 +22,8 @@ let sandbox = null
 let single = Object.assign({}, userFixtures.single)
 
 let ccidArgs = {
-  where: { ccid }
+  where: { ccid,
+          type: single.type}
 }
 
 let newUser = {
@@ -95,7 +96,8 @@ test.serial('User#createOrUpdate - new', async t => {
 
   // Una para el ccid
   t.true(UserStub.findOne.calledWith({
-  where: { ccid: newUser.ccid }
+  where: { ccid: newUser.ccid,
+          type: newUser.type }
   }), 'findOne should be called with ccid args')
 
   t.true(UserStub.create.called, 'create should be called on model')

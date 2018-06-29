@@ -14,7 +14,8 @@ module.exports = function setupUser(UserModel) {
   async function createOrUpdate(user) {
     const cond = {
       where: {
-        ccid: user.ccid
+        ccid: user.ccid,
+        type: user.type
       }
     }
      // Primero vamos a hacer un funcion asincrona para crear o actualizar los datos
