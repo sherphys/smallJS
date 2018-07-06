@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>130/130</span>
+        <span class='fraction'>129/129</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>122/122</span>
+        <span class='fraction'>121/121</span>
       </div>
     </div>
     <p class="quiet">
@@ -318,7 +318,10 @@
 <a name='L270'></a><a href='#L270'>270</a>
 <a name='L271'></a><a href='#L271'>271</a>
 <a name='L272'></a><a href='#L272'>272</a>
-<a name='L273'></a><a href='#L273'>273</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L273'></a><a href='#L273'>273</a>
+<a name='L274'></a><a href='#L274'>274</a>
+<a name='L275'></a><a href='#L275'>275</a>
+<a name='L276'></a><a href='#L276'>276</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -350,6 +353,8 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -499,6 +504,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -567,11 +574,10 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -623,7 +629,9 @@ let ccidchange = customer.ccid
 &nbsp;
 let vArgs = {
   where:{
-    id:oneAppointment.id,
+    day:oneAppointment.day,
+    hourinit:oneAppointment.hourinit,
+    hourend:oneAppointment.hourend,
     userId:oneAppointment.userId
   }
 }
@@ -672,8 +680,8 @@ let dayend = '2018-06-24'
 let daysArgs = {
   where: {
     day:{
-      [Op.lt]: dayinit,
-      [Op.gt]: dayend
+      [Op.gte]: dayinit,
+      [Op.lte]: dayend
     },
     state:1
   }
@@ -765,7 +773,9 @@ test.serial('Appointmet#createOrUpdate - new - user - doctor', async t =&gt; {
   t.true(AppointmentStub.findOne.calledOnce, 'findOne (appoint) should be called once')
   t.true(AppointmentStub.findOne.calledWith({
     where:{
-      id:newAppointment.id,
+      day:newAppointment.day,
+      hourinit:newAppointment.hourinit,
+      hourend:newAppointment.hourend,
       userId:newAppointment.userId
     }
   }), 'findOne (appoint) should be called with vargs')
@@ -815,8 +825,8 @@ test.serial('Appointment#findNoAssignedByDate', async t =&gt; {
   t.deepEqual(appointments, appointmentFixtures.bydays(dayinit, dayend), 'agents should be the same')
 })
 &nbsp;
-test.serial('Appointmet#AssignedAndUpdate - exist - user - customer', async t =&gt; {
-  let appointment = await db.Appointment.assignedAndUpdate(ccidchange, canceledAppointment)
+test.serial('Appointment#AssignedAndUpdate - exist - user - customer', async t =&gt; {
+  let appointment = await db.Appointment.assignedAndUpdate(ccidchange, changeAppointment.id)
 &nbsp;
   // Primero buscamos el usuario
   t.true(UserStub.findOne.called, 'findOne (user) should be called on model')
@@ -840,10 +850,9 @@ test.serial('Appointmet#AssignedAndUpdate - exist - user - customer', async t =&
 })
 &nbsp;
 test.serial('Appointmet#CanceledAndUpdate - exist - user/admin - customer', async t =&gt; {
-  let appointment = await db.Appointment.assignedAndUpdate(ccidchange, canceledAppointment)
+  let appointment = await db.Appointment.assignedAndUpdate(ccidchange, canceledAppointment.id)
 &nbsp;
-  // Primero buscamos el usuario
-  t.true(UserStub.findOne.called, 'findOne (user) should be called on model')
+  // Primero buscamos el usuario  t.true(UserStub.findOne.called, 'findOne (user) should be called on model')
   t.true(UserStub.findOne.calledOnce, 'findOne (user) should be called twice')
   t.true(UserStub.findOne.calledWith(ccidArgsCustomerOrAdmin), 'findOne (user) should be called with ccid args')
 &nbsp;
@@ -868,7 +877,7 @@ test.serial('Appointmet#CanceledAndUpdate - exist - user/admin - customer', asyn
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Jun 21 2018 17:30:14 GMT-0500 (-05)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Jul 05 2018 16:29:36 GMT-0500 (-05)
 </div>
 </div>
 <script src="../../prettify.js"></script>

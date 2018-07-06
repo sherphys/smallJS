@@ -3,15 +3,15 @@
 })()
 
 'user strict'
-function nextStep(user){
+function nextStep(user) {
   let nextstep
   switch (user.type) {
-    case 'admin': nextstep='/public/html/indexadmin.html'; break
-    case 'doctor': nextstep='/public/html/indexdoctor.html'; break
-    case 'customer': nextstep='/public/html/indexcustomer.html'; break
+    case 'admin': nextstep = '/public/html/indexadmin.html'; break
+    case 'doctor': nextstep = '/public/html/indexdoctor.html'; break
+    case 'customer': nextstep = '/public/html/indexcustomer.html'; break
   }
-  window.localStorage.setItem('name', user.name);
-  window.localStorage.setItem('ccid', user.ccid);
+  window.localStorage.setItem('name', user.name)
+  window.localStorage.setItem('ccid', user.ccid)
   window.location.href = nextstep
 }
 var bnew = $('#new').click(function() {
@@ -34,17 +34,15 @@ var bnew = $('#new').click(function() {
             nextStep(data)
           },
           error: function(data) {
-            if (data.status==400){
-              alert("ERROR 400 "+data.responseText)
-              window.location.href = "http://localhost:3000"
+            if (data.status == 400) {
+              alert('ERROR 400 ' + data.responseText)
+              window.location.href = 'http://localhost:3000'
             }
-            if (data.status==500){
-              alert('ERROR 500 '+data.responseText)
+            if (data.status == 500) {
+              alert('ERROR 500 ' + data.responseText)
             }
           }
         })
       }  else alert('Datos mal ingresados')
-      return false
-
     return false
 })

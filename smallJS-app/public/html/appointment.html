@@ -2,23 +2,25 @@
  <form>
  <label>CREAR UNA NUEVA CITA</label><br>
  Fecha de la cita:
- <input name="day" id="date" type="date" required><br>
+ <input name="day" id="day" type="date" required><br>
  Hora inicio:
- <input name="hourinit" type="time" id="tinit" min="9:00" max="18:00" required> <br>
+ <select name="hourinit" id="hourinit" type="time" disabled="disabled">
+</select><br>
  Hora final:
- <input name="hourend" type="time" id="tend" min="9:00" max="18:00" required> <br>
+ <select name="hourend" id="hourend" type="time" disabled="disabled">
+</select><br>
  Tipo de cita
- <select name="type">
+ <select name="type" id="type">
    <option value="General">General</option>
    <option value="Especialista">Especialista</option>
    <option value="Odontología">Odontología</option>
  </select><br>
  Sucursal:
- <select name="branch">
+ <select name="branch" id="branch">
         <option value=1>Principal</option>
         <option value=2>Secundaria</option>
         <option value=3>Terciaria</option>
       </select><br>
       <br>
-  <button id="Creation">Crear cita</button>
+  <button id="creation">Crear cita</button>
  </form>

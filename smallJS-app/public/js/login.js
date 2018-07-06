@@ -4,15 +4,15 @@
 
 'user strict'
 
-function nextStep(user){
+function nextStep(user) {
   let nextstep
   switch (user.type) {
-    case 'admin': nextstep='/public/html/indexadmin.html'; break
-    case 'doctor': nextstep='/public/html/indexdoctor.html'; break
-    case 'customer': nextstep='/public/html/indexcustomer.html'; break
+    case 'admin': nextstep = '/public/html/indexadmin.html'; break
+    case 'doctor': nextstep = '/public/html/indexdoctor.html'; break
+    case 'customer': nextstep = '/public/html/indexcustomer.html'; break
   }
-  window.localStorage.setItem('name', user.name);
-  window.localStorage.setItem('ccid', user.ccid);
+  window.sessionStorage.setItem('name', user.name)
+  window.sessionStorage.setItem('ccid', user.ccid)
   window.location.href = nextstep
 }
 
@@ -27,7 +27,7 @@ var blog = $('#login').click(function() {
     password: $('#pass').val(),
     ccid: $('#ccid').val()
   }
-  
+
   conditionRequired = data.type && data.password && data.ccid
   if (conditionRequired) {
     $.ajax({
@@ -35,21 +35,15 @@ var blog = $('#login').click(function() {
       url: 'http://localhost:3000/redir',
       data: JSON.stringify(data),
       contentType: 'application/json',
-      dataType: 'json', //Otra forma importante ¡ESTUDIAR!
+      dataType: 'json', // Otra forma importante ¡ESTUDIAR!
       success: function(data) {
         nextStep(data)
       },
       error: function(data) {
-        alert('Usuario no encontrado. ERROR 500 '+data.responseText)
+        alert('Usuario no encontrado. ERROR 500 ' + data.responseText)
       }
     })
   }  else alert('Datos mal ingresados')
   return false
 })
-var nameGet=window.localStorage.getItem('name')
-var ccidGet=window.localStorage.getItem('ccid')
-$('#title').replaceWith("NOMBRE: "+nameGet+ " CC: "+ccidGet)
-
-
-
 

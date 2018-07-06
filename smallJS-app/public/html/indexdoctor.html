@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <style>
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+            
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+            
+            tr:nth-child(even) {
+                background-color: #dddddd;
+            }
+            </style>
     <meta charset="UTF-8">
     <title>Asignación de citas IPS XXX</title>
     </head>
@@ -10,15 +27,14 @@
  <div id="title"></div>
  <form>
   <label>¿Qué desea hacer?</label><br>
-    <button id="new_app">Crear una cita</button>
+    <button id="new_app">Crear una cita nueva</button>
     <button id="revised">Revisar mis citas</button>
     <button id="modifiqued">Modificar una cita no asignada</button>
+    <button id="close">Cerrar sesión</button>
  </form><br>
-  <div id="new_appointment"></div>
-  <div id="rev_appointment"></div>
-  <div id="mod_appointment"></div>
+  <div id="space"></div>
+  
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script src="/public/js/login.js"></script>
   <script src="/public/js/doctor.js"></script>
  </body>
 </html>

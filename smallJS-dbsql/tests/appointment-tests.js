@@ -31,7 +31,9 @@ let ccidchange = customer.ccid
 
 let vArgs = {
   where:{
-    id:oneAppointment.id,
+    day:oneAppointment.day,
+    hourinit:oneAppointment.hourinit,
+    hourend:oneAppointment.hourend,
     userId:oneAppointment.userId
   }
 }
@@ -80,8 +82,8 @@ let dayend = '2018-06-24'
 let daysArgs = {
   where: {
     day:{
-      [Op.lt]: dayinit,
-      [Op.gt]: dayend
+      [Op.gte]: dayinit,
+      [Op.lte]: dayend
     },
     state:1
   }
@@ -173,7 +175,9 @@ test.serial('Appointmet#createOrUpdate - new - user - doctor', async t => {
   t.true(AppointmentStub.findOne.calledOnce, 'findOne (appoint) should be called once')
   t.true(AppointmentStub.findOne.calledWith({
     where:{
-      id:newAppointment.id,
+      day:newAppointment.day,
+      hourinit:newAppointment.hourinit,
+      hourend:newAppointment.hourend,
       userId:newAppointment.userId
     }
   }), 'findOne (appoint) should be called with vargs')
@@ -223,8 +227,8 @@ test.serial('Appointment#findNoAssignedByDate', async t => {
   t.deepEqual(appointments, appointmentFixtures.bydays(dayinit, dayend), 'agents should be the same')
 })
 
-test.serial('Appointmet#AssignedAndUpdate - exist - user - customer', async t => {
-  let appointment = await db.Appointment.assignedAndUpdate(ccidchange, canceledAppointment)
+test.serial('Appointment#AssignedAndUpdate - exist - user - customer', async t => {
+  let appointment = await db.Appointment.assignedAndUpdate(ccidchange, changeAppointment.id)
 
   // Primero buscamos el usuario
   t.true(UserStub.findOne.called, 'findOne (user) should be called on model')
@@ -248,10 +252,9 @@ test.serial('Appointmet#AssignedAndUpdate - exist - user - customer', async t =>
 })
 
 test.serial('Appointmet#CanceledAndUpdate - exist - user/admin - customer', async t => {
-  let appointment = await db.Appointment.assignedAndUpdate(ccidchange, canceledAppointment)
+  let appointment = await db.Appointment.assignedAndUpdate(ccidchange, canceledAppointment.id)
 
-  // Primero buscamos el usuario
-  t.true(UserStub.findOne.called, 'findOne (user) should be called on model')
+  // Primero buscamos el usuario  t.true(UserStub.findOne.called, 'findOne (user) should be called on model')
   t.true(UserStub.findOne.calledOnce, 'findOne (user) should be called twice')
   t.true(UserStub.findOne.calledWith(ccidArgsCustomerOrAdmin), 'findOne (user) should be called with ccid args')
 

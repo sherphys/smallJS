@@ -11,7 +11,9 @@ module.exports = function setupAppointment(AppointmentModel, UserModel) {
       })
       const existingAppointmentBelongtoUser   = await AppointmentModel.findOne({
         where: {
-          id:appointment.id,
+          day:appointment.day,
+          hourinit:appointment.hourinit,
+          hourend:appointment.hourend,
           userId:user.id
         }
       })
@@ -38,21 +40,21 @@ module.exports = function setupAppointment(AppointmentModel, UserModel) {
       return AppointmentModel.findAll({
         where: {
           day:{
-            [Op.lt]: dayinit,
-            [Op.gt]: dayend
+            [Op.gte]: dayinit,
+            [Op.lte]: dayend
           },
           state:1
         }
       })
-    }// Fin de async function findNoAssignedByWeek
+    }// Fin de async function findNoAssignedByDate
 
     // O las citas por días no asignadas con alguna condición más
-    async function findNoAssignedByGroup(property, value, dayinit, dayend) {
+    async function findNoAssignedByDateGroup(property, value, dayinit, dayend) {
       let query = {
         where: {
           day:{
-            [Op.lt]: dayinit,
-            [Op.gt]: dayend
+            [Op.gte]: dayinit,
+            [Op.lte]: dayend
           },
           state:1
         }
@@ -60,47 +62,71 @@ module.exports = function setupAppointment(AppointmentModel, UserModel) {
 
       switch (property) {
         case 'type':
-          console.log('Type')
           query.where.type = value
           break
         case 'doctorname':
-          console.log('doctorname')
           query.where.doctorname = value
           break
         case 'branch':
-          console.log('branch')
           query.where.branch = value
           break
         default:
-          console.log('Default')
           query = null
           break
       }
       return AppointmentModel.findAll(query)
     }// Fin de async function findNoAssignedByGroup
 
-    // O las citas por día sin importar la asignación con alguna condición más
-    async function findByDayGroup(property, value, dayinit, dayend) {
+    async function findAssignedByDateGroup(property, value, dayinit, dayend) {
       let query = {
         where: {
           day:{
-            [Op.lt]: dayinit,
-            [Op.gt]: dayend
+            [Op.gte]: dayinit,
+            [Op.lte]: dayend
+          },
+          state:2
+        }
+      }
+
+      switch (property) {
+        case 'type':
+          query.where.type = value
+          break
+        case 'doctorname':
+          query.where.doctorname = value
+          break
+        case 'branch':
+          query.where.branch = value
+          break
+        case 'assignedid':
+          query.where.assignedid = value
+          break
+        default:
+          query = null
+          break
+      }
+      return AppointmentModel.findAll(query)
+    }// Fin de async function findNoAssignedByGroup
+
+    
+    // O las citas por día sin importar la asignación con alguna condición más
+    async function findByDateGroup(property, value, dayinit, dayend) {
+      let query = {
+        where: {
+          day:{
+            [Op.gte]: dayinit,
+            [Op.lte]: dayend
           }
         }
       }
       switch (property) {
         case 'type':
-          console.log('Type')
           query.where.type = value
           break
-
         case 'doctorname':
-          console.log('doctorname')
           query.where.doctorname = value
           break
         case 'branch':
-          console.log('branch')
           query.where.branch = value
           break
         default:
@@ -108,10 +134,10 @@ module.exports = function setupAppointment(AppointmentModel, UserModel) {
           query = null
           break
       }
-      return AppointmentModel.findAll(query)
+      return await AppointmentModel.findAll(query)
     }
 
-    async function assignedAndUpdate(ccid, appointment) {
+    async function assignedAndUpdate(ccid, id) {
       const condUser = {
         where: {
           ccid: ccid,
@@ -121,16 +147,21 @@ module.exports = function setupAppointment(AppointmentModel, UserModel) {
       // Luego creamos una variable que nos devuelva si existe ese usuario como cliente
       const user   = await UserModel.findOne(condUser)
       // Probar que existe la cita
-      const existingAppointment   = await AppointmentModel.findById(appointment.id)
+      const appointment   = await AppointmentModel.findById(id)
       // o por el id de la cita, para ese usamos findId
       // Existe y es un cliente
 
-      if (user && existingAppointment) {
-        const updated = await AppointmentModel.update(appointment, {id:appointment.id, userId:appointment.UserId, assignedid: user.ccid, assignedname: user.name, state:2})
+      if (user && appointment) {
+        let changes={assignedid: user.ccid, assignedname: user.name, state:2}
+        let selector={
+           where: {
+              id: appointment.id }
+        }
+        //Object.assign(appointment, { assignedid: user.ccid })
+        const updated = await AppointmentModel.update(changes,selector)//, assignedid: user.ccid, assignedname: user.name, state:2})
         return updated ? AppointmentModel.findById(appointment.id) : appointment
       }
-
-      return appointment
+      else return appointment
       // Aquí hay que poner algo por si no se actualiza.
     }// Fin de async function create
 
@@ -149,17 +180,22 @@ module.exports = function setupAppointment(AppointmentModel, UserModel) {
       // Luego creamos una variable que nos devuelva si existe ese usuario como cliente
       const user   = await UserModel.findOne(condUser)
        // Probar que existe la cita
-      const existingAppointment   = await AppointmentModel.findById(appointment.id)
+      const appointment   = await AppointmentModel.findById(appointment.id)
       // o por el id de la cita, para ese usamos findId
       // Existe y es un cliente
       if (user && appointment.assigned === 2) {
         if (user.type === 'customer' && appointment.assignedid === user.ccid || user.type === 'admin') {
-          const updated = await AppointmentModel.update(appointment, {
-            assignedid:'', assignedname:'', state:1
-          })
-          return updated ? AppointmentModel.findOne(appointment.id) : existingAppointment
+          let changes={assignedid:'', assignedname:'', state:1}
+          let selector= {
+            where: {
+              id: appointment.id 
+            }
+          }
+          const updated = await AppointmentModel.update(changes, selector)  
+          return updated ? AppointmentModel.findOne(appointment.id) : appointment
         }
       }
+      else return appointment
       // Aquí hay que poner algo por si no se actualiza.
     }// Fin de async function create
 
@@ -172,7 +208,7 @@ module.exports = function setupAppointment(AppointmentModel, UserModel) {
 
     // Buscar por ccidAssigned (one)
     async function findByCCid(ccid) {
-      const user = await AppointmentModel.findOne({
+      const user = await UserModel.findOne({
         where: {ccid}
       })
       return AppointmentModel.findAll({
@@ -190,8 +226,8 @@ module.exports = function setupAppointment(AppointmentModel, UserModel) {
         where: {
           userId: user.id,
           day:{
-            [Op.lt]: dayinit,
-            [Op.gt]: dayend
+            [Op.gte]: dayinit,
+            [Op.lte]: dayend
           }
         }
       })
@@ -200,9 +236,10 @@ module.exports = function setupAppointment(AppointmentModel, UserModel) {
     return {
       createOrUpdate,
       findNoAssignedByDate,
+      findNoAssignedByDateGroup,
+      findAssignedByDateGroup,
       findByCCidDate,
-      findNoAssignedByGroup,
-      findByDayGroup,
+      findByDateGroup,
       findByCCid,
       findById,
       assignedAndUpdate,

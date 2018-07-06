@@ -47,14 +47,13 @@ api.post('/register', async (req, res) => {
   })
 
   if (userExisting) {
-    res.status(400).send('El usuario ya está registrado en el sistema. Inicie sesión'); 
-  }
-  else{
+    res.status(400).send('El usuario ya está registrado en el sistema. Inicie sesión')
+  }  else {
     let user = await User.createOrUpdate(completeInfo).catch(err => {
     console.log(err.stack)
     res.status(500).send('No, no se pudo guardar la información')
     })
-    
+
     res.status(200).send(JSON.stringify(user))
   }
 })
@@ -73,58 +72,64 @@ api.post('/redir', async (req, res) => {
   }
 })
 
-/* api.post('/doctors', async (req, res) => {
-  let clone = Object.assign({}, req.body)
-  switch(clone.type){
-  let completeInfo =  Object.assign(clone, {assignedid:0, assignedname:'', state:1})
-  let appointment = await Appointment.createOrUpdate(completeInfo).catch(err => {
-    console.log(err.stack)
-    res.status(400).send('No, no se pudo guardar la información')
-  })
-  res.redirect('/appointment')
- }) */
-
- api.post('/appoitment', async (req, res) => {
+ api.post('/appointments', async (req, res) => {
+  let ccid = req.body.ccid
+  delete req.body.ccid
   let clone = Object.assign({}, req.body)
   let completeInfo =  Object.assign(clone, {assignedid:0, assignedname:'', state:1})
-  let appointment = await Appointment.createOrUpdate(completeInfo).catch(err => {
+  let appointment = await Appointment.createOrUpdate(ccid, completeInfo).catch(err => {
     console.log(err.stack)
-    res.status(400).send('No, no se pudo guardar la información')
+    res.status(500).send('No, no se pudo guardar la información')
   })
-  res.redirect('/appointment')
+  res.status(200).send('Cita guardadas')
  })
 
- /*
- type='admin'
- hostname: 'test-host',
- pid: 1,
- connected: true,
- createdAt: new Date(),
- updatedAt: new Date() */
+ api.post('/valide', async (req, res) => {
+  let appointments = await Appointment.findByDateGroup('doctorname', req.body.doctorname, req.body.day, req.body.day).catch(err => {
+    console.log(err.stack)
+    res.status(500).send('No, no se pudo encontrar la información')
+  })
+  res.status(200).send(appointments)
+ })
 
-// app.use(express.static('public'));
-// Lo que hacemos aquí es pedir un archivo importante: la base de datos
+ api.post('/appointments/all', async (req, res) => {
+  let ccid = req.body.ccid
+  let appointments = await Appointment.findByCCid(ccid).catch(err => {
+    console.log(err.stack)
+    res.status(500).send('No se pudo encontrar la información')
+  })
+  res.status(200).send(appointments)
+ })
 
-// /////VAMOS A HACER LA PRIMERA SOLICITUD
-/* api.get('/user', auth(config.auth), async (req, res, next) => {
-    debug('A request has come to /user')
-    const { user } = req
-    if (!user || !user.username) {
-      return next(new Error('Not authorized'))
-    }
-    let users = []
-    try {
-      if (user.admin) {
-        users = await User.findConnected()
-      }
-      else {
-      agents = await Agent.findByUsername(user.username)
-      }
-    }
-    catch (error) {
-      return next(error)
-    }
-    res.send(users)
-  }) */
+ api.post('/appointments/free', async (req, res) => {
+   let dayinit = req.body.dayinit
+   let dayend = req.body.dayend
+   let appointments = await Appointment.findNoAssignedByDate(dayinit, dayend).catch(err => {
+    console.log(err.stack)
+    res.status(500).send('No se pudo encontrar la información')
+  })
+  res.status(200).send(appointments)
+ })
+
+api.post('/appointments/nofree', async (req, res) => {
+  let ccid = req.body.ccid
+  let id = req.body.id
+  let appointment = await Appointment.assignedAndUpdate(ccid, id).catch(err => {
+   console.log(err.stack)
+   res.status(500).send('No se pudo encontrar la información')
+ })
+ res.status(200).send(appointment)
+})
+
+api.post('/appointments/assign', async (req, res) => {
+  let ccid = req.body.ccid
+  let dayinit = req.body.dayinit
+  let dayend = req.body.dayend
+  let appointment = await Appointment.findAssignedByDateGroup('assignedid',ccid, dayinit, dayend).catch(err => {
+   console.log(err.stack)
+   res.status(500).send('No se pudo encontrar la información')
+ })
+ res.status(200).send(appointment)
+})
 
 module.exports = api
