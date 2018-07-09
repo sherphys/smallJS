@@ -1,40 +1,48 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            table {
-                font-family: arial, sans-serif;
-                border-collapse: collapse;
-                width: 100%;
-            }
-            
-            td, th {
-                border: 1px solid #dddddd;
-                text-align: left;
-                padding: 8px;
-            }
-            
-            tr:nth-child(even) {
-                background-color: #dddddd;
-            }
-            </style>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/css/mystyle.css"> 
     <meta charset="UTF-8">
     <title>Asignación de citas IPS XXX</title>
-    </head>
+  </head>
  
- <body>
- <h1>AGENDA DE CITAS IPS XXX (DOCTOR) </h1>
- <div id="title"></div>
- <form>
-  <label>¿Qué desea hacer?</label><br>
-    <button id="new_app">Crear una cita nueva</button>
-    <button id="revised">Revisar mis citas</button>
-    <button id="modifiqued">Modificar una cita no asignada</button>
-    <button id="close">Cerrar sesión</button>
- </form><br>
-  <div id="space"></div>
-  
+  <body>
+    <div class="allscreen-normal">
+
+        <nav class="navbar navbar-light" style="background-color: rgba(226, 228, 247, 0.3);">
+          <div class="container-fluid">          
+            <div class="navbar-header">
+                <img style=" float: left;
+                margin: 0px 10px 0px 0px;" src="/public/images/logo.png"  width="50" height="50" alt="">
+                <a class="navbar-brand"> Agenda IPS XXX</a>
+            </div>
+
+           
+          <ul class="nav navbar-nav navbar-right">
+              <li><a id="profile" data-toggle="popover" data-placement="bottom" data-content="" style="width: 170px;text-align: center;" >
+                <span class="glyphicon glyphicon-user"></span>Mi perfil</a></li>
+              <li><a id="close"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+          </ul>
+          </div>
+        </nav>
+
+        <!-- Sidebar --> 
+        <ul class="sidebar-nav">
+          <li> <a id="new_app">Crear una cita nueva</a> </li>
+          <li> <a id="revised">Revisar mis citas</a>  </li>
+          <li> <a id="modifiqued">Modificar citas no asignadas</a> </li>
+          <li> <a id="modifiquedAdmin">Modificar citas asignadas</a> </li>
+          <li> <a id="contact">Contacto</a> </li>
+        </ul>
+
+        <div id="space" class="container-space"></div>
+    </div>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <script src="/public/js/doctor.js"></script>
+  <script src="/public/js/tools.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
  </body>
 </html>

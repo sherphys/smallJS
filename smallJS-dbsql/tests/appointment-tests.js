@@ -51,8 +51,7 @@ let ccidArgsCustomer = {
 
 let ccidArgsCustomerOrAdmin = {
   where: {
-    ccid:ccidchange,
-    type:'customer'
+    ccid:ccidchange
   }
 }
 

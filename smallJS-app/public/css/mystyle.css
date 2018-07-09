@@ -1,0 +1,132 @@
+table tr {
+  line-height: 25px;
+  min-height: 25px;
+  height: 50px;
+}
+
+.disabled {
+  display: none;
+}
+
+.container-login{
+  background-color:rgb(255, 255, 255,0.6);
+  width: 400px;
+  margin-top: 10px;
+  padding: 10px 10px 10px 10px;
+  overflow: auto;
+
+}
+
+.container-space{
+  color: rgb(22, 117, 206);
+  margin-top: 30px;
+  margin-left: 300px; 
+  padding: 10px 10px 10px 10px;
+  width: 800px;
+  text-align: center;
+}
+
+.allscreen
+{
+  background-image:url(/public/images/fondo3.jpg); 
+  background-position:center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; 
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  overflow: auto;
+}
+
+.allscreen-normal
+{
+  background-image:url(/public/images/fondo4.jpg); 
+  height: 100%; 
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  overflow: auto;
+}
+
+.bar-login
+{
+  background-color: blue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bar-login h1{
+  color:white;
+}
+
+body, html {
+  height: 100%;
+}
+
+/* enable absolute positioning */
+.inner-addon { 
+  position: relative; 
+}
+
+/* style icon */
+.inner-addon .glyphicon {
+position: absolute;
+padding: 10px;
+pointer-events: none;
+}
+
+/* align icon */
+.left-addon .glyphicon  { left:  0px;}
+.right-addon .glyphicon { right: 0px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }
+
+.sidebar-nav {
+  position: absolute;
+  top: 50px;
+  width: 270px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: rgb(25, 45, 224,.8);
+  height: 100%;
+}
+
+.sidebar-nav li {
+  text-indent: 20px;
+  line-height: 40px;
+}
+
+.sidebar-nav li a {
+  display: block;
+  text-decoration: none;
+  color: #f3eded;
+}
+
+.sidebar-nav li a:hover {
+  text-decoration: none;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-nav li a:active, .sidebar-nav li a:focus {
+  text-decoration: none;
+}
+
+.sidebar-nav>.sidebar-brand {
+  height: 65px;
+  font-size: 18px;
+  line-height: 60px;
+}
+
+.sidebar-nav>.sidebar-brand a {
+  color: #999999;
+}
+
+.sidebar-nav>.sidebar-brand a:hover {
+  color: #fff;
+  background: none;
+}

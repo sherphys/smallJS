@@ -1,70 +1,84 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            table {
-                font-family: arial, sans-serif;
-                border-collapse: collapse;
-                width: 100%;
-            }
-            
-            td, th {
-                border: 1px solid #dddddd;
-                text-align: left;
-                padding: 8px;
-            }
-            
-            tr:nth-child(even) {
-                background-color: #dddddd;
-            }
-
-            .disabled {
-                display: none;
-            }
-            </style>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/css/mystyle.css">    
     <meta charset="UTF-8">
     <title>Asignación de citas IPS XXX</title>
-    </head>
- <body>
+  </head>
+  <body>
+    <div class="allscreen-normal">
+        <nav class="navbar navbar-light" style="background-color: rgba(226, 228, 247, 0.3);">
+          <div class="container-fluid">          
+            <div class="navbar-header">
+                <img style=" float: left;
+                margin: 0px 10px 0px 0px;" src="/public/images/logo.png"  width="50" height="50" alt="">
+                <a class="navbar-brand"> Agenda IPS XXX</a>
+            </div>
+  
+            <ul class="nav navbar-nav navbar-right">
+                <li><a id="profile" data-toggle="popover" data-placement="bottom" data-content="" style="width: 170px;text-align: center;" >
+                  <span class="glyphicon glyphicon-user"></span>Mi perfil</a></li>
+                <li><a id="close"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+            </ul>
+          </div>
+        </nav>
 
- <form>
- <h1>FILTRO PARA LA BÚSQUEDA DE CITAS</h1><br><br>
- <div id="title"></div><br><br>
- Fecha (1) de la cita:
- <input name="dayinit" id="dayinit" type="date" required><br>
- Fecha (2) de la cita:
- <input name="dayend" id="dayend" type="date"  ><br>
- <!--
- Hora inicio:
- <select name="hourinit" id="hourinit" type="time" disabled="disabled">
-</select><br>
- Hora final:
- <select name="hourend" id="hourend" type="time" disabled="disabled">
-</select><br>
- Tipo de cita
- <select name="type" id="type">
-   <option value="General">General</option>
-   <option value="Especialista">Especialista</option>
-   <option value="Odontología">Odontología</option>
- </select><br>
- Sucursal:
- <select name="branch" id="branch">
-        <option value=1>Principal</option>
-        <option value=2>Secundaria</option>
-        <option value=3>Terciaria</option>
-      </select><br>
-      <br>
--->
-</form>
-<div id="action"> </div>
-  <button id="findapp" class="disabled">Buscar citas</button>
-  <button id="reviseapp" class="disabled">Revisar citas</button>
-  <button id="canceleddapp"  class="disabled">Cancelar citas</button>
-<button id="back">Atrás</button>
-<table id=myTable>      
-</table>
+        <div class="container-fluid">    
+          <form class="form-horizontal">
+            <label>FILTRO PARA LA BÚSQUEDA DE CITAS</label>
+            <div class="form-group">
+              <div class="row">
+                <label class="control-label col-sm-4">Fecha inicio de la búsqueda:</label>
+                <div class="col-sm-6"> <input name="dayinit" id="dayinit" type="date" class="form-control"required></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row">
+                <label class="control-label col-sm-4">Fecha final de la búsqueda:</label>
+                <div class="col-sm-6"> <input name="dayend" id="dayend" type="date" class="form-control"> </div>
+              </div>
+            </div>
+            
+            
+            <!--
+            Hora inicio:
+            <select name="hourinit" id="hourinit" type="time" disabled="disabled">
+            </select><br>
+            Hora final:
+            <select name="hourend" id="hourend" type="time" disabled="disabled">
+            </select><br>
+            Tipo de cita
+            <select name="type" id="type">
+              <option value="General">General</option>
+              <option value="Especialista">Especialista</option>
+              <option value="Odontología">Odontología</option>
+            </select><br>
+            Sucursal:
+            <select name="branch" id="branch">
+                    <option value=1>Principal</option>
+                    <option value=2>Secundaria</option>
+                    <option value=3>Terciaria</option>
+                  </select><br>
+                  <br>
+            -->
+          </form>
+          <br>
+          <button id="back" class="btn btn-primary ">Atrás</button>
+            <button id="findapp" class="btn btn-primary disabled pull-right">Buscar citas</button>
+            <button id="revisedapp" class="btn btn-primary disabled pull-right">Revisar citas</button>
+            <button id="canceledapp"  class="btn btn-primary disabled pull-right">Cancelar citas</button>
+           
+          <table id=myTable class="table">  </table>
+      </div>
+    </div>
  
- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
- <script src="/public/js/customer.js"></script>
-</body>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="/public/js/customer.js"></script>
+    <script src="/public/js/tools.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </body>
 </html>

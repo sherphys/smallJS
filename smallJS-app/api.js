@@ -10,14 +10,15 @@ const bodyParser = require('body-parser')
 
 const config = require('./config')
 const api = asyncify(express.Router())
-let services, User, Appointment
+var services, User, Appointment
 
 api.use('/public', express.static(__dirname + '/public'))
 
+// to support JSON-encoded bodies
 api.use(bodyParser.urlencoded({ extended: true }))
-api.use(express.json())       // to support JSON-encoded bodies
-// api.use(express.urlencoded()); // to support URL-encoded bodies
+api.use(express.json())       
 
+//Cargamos las DB en todas partes
 api.use('*', async (req, res, next) => {
   if (!services) {
     debug('Connecting to database')
@@ -33,43 +34,72 @@ api.use('*', async (req, res, next) => {
   next()
 })
 
+//Pedimos confirmación que los servicios de la DB han sido cargados
 api.get('/', (req, res) => {
   if (services) res.sendFile('/public/html/login.html', {root : __dirname})
   else res.status(500).send('¡Problemas con la DB!')
- })
+})
 
+
+//Registro, creación de un usuario nuevo
 api.post('/register', async (req, res) => {
   let clone = Object.assign({}, req.body)
-  let completeInfo =  Object.assign(clone, {hostname: 'test-host', pid: 1, connected: true})
-  let userExisting = await User.findByCCid(clone.ccid).catch(err => {
+  const completeInfo =  Object.assign(clone, {hostname: 'test-host', pid: 1, connected: true})
+  const userExisting = await User.findByCCid(clone.ccid).catch(err => {
     console.log(err.stack)
     res.status(500)
   })
 
   if (userExisting) {
     res.status(400).send('El usuario ya está registrado en el sistema. Inicie sesión')
-  }  else {
+  }  
+  else {
+    
     let user = await User.createOrUpdate(completeInfo).catch(err => {
     console.log(err.stack)
-    res.status(500).send('No, no se pudo guardar la información')
+    res.status(500).send('No se pudo guardar la información')
     })
 
     res.status(200).send(JSON.stringify(user))
   }
 })
 
-api.post('/redir', async (req, res) => {
+
+//Login de usuario
+api.post('/login', async (req, res) => {
   let clone = Object.assign({}, req.body)
   // La información puede ser revisada
   let user = await User.findByCCid(clone.ccid).catch(err => {
     console.log(err.stack)
     res.status(500)
   })
-  if (user.type === clone.type && user.password === clone.password)  {
+  if (user.password === clone.password)  {
+    const completeInfo =  Object.assign(clone, {hostname: 'test-host', pid: 1, connected: true})
+    user = await User.createOrUpdate(completeInfo).catch(err => {
+      console.log(err.stack)
+      res.status(500).send('No se pudo guardar la información')
+    })
     res.status(200).send(JSON.stringify(user))
-  }    else {
-    res.status(500)
+  }    
+  else {
+    res.status(500).send("Contraseña equivocada")
   }
+})
+
+
+api.post('/logout', async (req, res) => {
+  let clone = Object.assign({}, req.body)
+  // La información puede ser revisada
+  let user = await User.findByCCid(clone.ccid).catch(err => {
+    console.log(err.stack)
+    res.status(500)
+  })
+  const completeInfo =  Object.assign(clone, {hostname: '', pid: 0, connected: false})
+  user = await User.createOrUpdate(completeInfo).catch(err => {
+    console.log(err.stack)
+    res.status(500).send('No se pudo guardar la información')
+  })
+  res.status(200).send("Sesión cerrada")
 })
 
  api.post('/appointments', async (req, res) => {
@@ -118,7 +148,17 @@ api.post('/appointments/nofree', async (req, res) => {
    console.log(err.stack)
    res.status(500).send('No se pudo encontrar la información')
  })
- res.status(200).send(appointment)
+ res.status(200).send("Cita asignada")
+})
+
+api.post('/appointments/cancel', async (req, res) => {
+  let ccid = req.body.ccid
+  let id = req.body.id
+  let appointment = await Appointment.canceledAndUpdate(ccid, id).catch(err => {
+   console.log(err.stack)
+   res.status(500).send('No se pudo encontrar la información')
+ })
+ res.status(200).send("Cita cancelada")
 })
 
 api.post('/appointments/assign', async (req, res) => {

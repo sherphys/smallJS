@@ -5,6 +5,7 @@
 'user strict'
 
 var section = {}
+
 location.search
   .replace("?", "")
   .split("&")
@@ -13,42 +14,37 @@ location.search
     section[k] = v
   })
 
-  $
-
   if(section.id) {
     switch(section.id) {
+      case "find":
+        $("#findapp").removeClass("disabled")
+      break
+      case "revised":
+        $("#revisedapp").removeClass("disabled")
+      break
       case "modifiqued":
-        $("#canceleddapp").removeClass("disabled")
-        break
+        $("#canceledapp").removeClass("disabled")
+      break
     }
   }
 
-var nameGet = window.sessionStorage.getItem('name')
-var ccidGet = window.sessionStorage.getItem('ccid')
-$('#title').replaceWith('NOMBRE: ' + nameGet + ' CC: ' + ccidGet)
-
-
-var bredirect = $('.bredir').click(function() {
+var redirect = $('.filter').click(function() {
   var id = $(this).attr('id')
-
-  switch(id)
-  {
-    case 'close' : 
-      sessionStorage.clear()
-      //window.location.href = 'http://localhost:3000/'
-      break
-    default: window.location.href=`/public/html/filter.html?id=${id}`
-  }
+  window.location.href=`/public/html/filter.html?id=${id}`  
   return false
 })
 
-var brevised = $('#reviseapp').click(function() {
-  tablerevised().then(tablemakeonly)    
+var buttonCanceled= $('#canceledapp').click(function() {
+  tablerevised("Cancelar cita").then(appoitmentCanceled).catch(showalert)    
+  return false
+})
+var buttonRevised = $('#revisedapp').click(function() {
+  tablerevised().then(tablemakeonly).catch(showalert)    
   return false
 })
 
-var bfind = $('#findapp').click(function() {
-  tablecallback().then(appoitmentAssigned)    
+var buttonFind = $('#findapp').click(function() {
+  tablecallback("Reservar cita").then(appoitmentAssigned).catch(showalert)    
   return false
 })
 
@@ -58,7 +54,7 @@ var bfindredirect = $('#back').click(function() {
 })
 
 
-function tablecallback(){
+function tablecallback(msj){
   data = {
     dayinit: $('#dayinit').val(),
     dayend: $('#dayend').val() || $('#dayinit').val(),
@@ -68,8 +64,8 @@ function tablecallback(){
   DateInit = new Date(data.dayinit)
   DateEnd = new Date(data.dayend)
   conditionTime = DateInit <= DateEnd
-  if(conditionRequired && conditionTime){
-    return new Promise((resolve)=>{
+    return new Promise((resolve,reject)=>{
+      if(conditionRequired && conditionTime){
       $.ajax({
         type: 'POST',
         url: 'http://localhost:3000/appointments/free',
@@ -77,6 +73,7 @@ function tablecallback(){
         contentType: 'application/json',
         success: function(data) {
           tablemake(data)
+          $(".bapp").append(msj)
           $('.bapp').click(function() {
             var id = $(this).attr('id')
             response={
@@ -88,13 +85,13 @@ function tablecallback(){
         },
         error: function(data) {
           if (data.status == 500) {
-            alert('ERROR 500 ' + data.responseText)    
+            reject('ERROR 500 ' + data.responseText)    
           }
         }
       })
-    })
-  }
-  else alert("Datos mal ingresados")
+    }
+    else reject("Datos mal ingresados")
+  })
 }
 
 function tablemake(data) {
@@ -103,8 +100,12 @@ function tablemake(data) {
   for (i = 0; i < data.length; i++) {
     rowTable += '\n <tr> \n <td> ' + data[i].day + ' </td> \n <td> ' + data[i].hourinit + ' </td> \n <td> '
     + data[i].hourend + ' </td> \n <td> ' + branch[data[i].branch] + ' </td> \n <td> ' + data[i].doctorname + ' </td> \n <td> ' +
-    data[i].type + ' </td> <td> <button class=bapp id='+data[i].id+'>Reservar cita</button> </td> </tr>'
+    data[i].type + ' </td> <td> <button class="btn btn-primary bapp" id='+data[i].id+'></button> </td> </tr>'
   }
+  $('#myTable').html(rowTable)
+}
+function cleantable(){
+  var rowTable =""
   $('#myTable').html(rowTable)
 }
 function tablemakeonly(data) {
@@ -124,19 +125,38 @@ function appoitmentAssigned(data) {
     data: JSON.stringify(data),
     contentType: 'application/json',
     success: function(data) { 
-      console.log(JSON.stringify(data))
-      window.location.href='/public/html/filter.html'
+      showalert(data,{title:"Listo",icon:"success"})
+      cleantable()
     },
     error: function(data) {
       if (data.status == 500) {
-        alert('ERROR 500 ' + data.responseText)    
+        showalert('ERROR 500 ' + data.responseText)    
       }
     }
   })
   return false
 }
 
-function tablerevised(){
+function appoitmentCanceled(data) {
+  $.ajax({
+    type: 'POST',
+    url: 'http://localhost:3000/appointments/cancel',
+    data: JSON.stringify(data),
+    contentType: 'application/json',
+    success: function(data) { 
+      showalert(data,{title:"Listo",icon:"success"})
+      cleantable()
+    },
+    error: function(data) {
+      if (data.status == 500) {
+        showalert('ERROR 500 ' + data.responseText)    
+      }
+    }
+  })
+  return false
+}
+
+function tablerevised(msj){
   data = {
     ccid: ccidGet,
     dayinit: $('#dayinit').val(),
@@ -148,18 +168,30 @@ function tablerevised(){
   DateEnd = new Date(data.dayend)
   conditionTime = DateInit <= DateEnd
   if(conditionRequired && conditionTime){
-    return new Promise((resolve)=>{
+    return new Promise((resolve,reject)=>{
       $.ajax({
         type: 'POST',
         url: 'http://localhost:3000/appointments/assign',
         data: JSON.stringify(data),
         contentType: 'application/json',
         success: function(data) {
-          resolve(data)
+          if(msj){
+            tablemake(data)
+            $(".bapp").append(msj)
+            $('.bapp').click(function() {
+              var id = $(this).attr('id')
+              response={
+                id:id,
+                ccid:ccidGet
+              }
+              resolve(response)
+            })    
+          }
+          else resolve(data)
         },
         error: function(data) {
           if (data.status == 500) {
-            alert('ERROR 500 ' + data.responseText)    
+            reject('ERROR 500 ' + data.responseText)    
           }
         }
       })

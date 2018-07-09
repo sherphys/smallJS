@@ -24,7 +24,8 @@
     "express-asyncify": "^1.0.0",
     "express-jwt": "^5.3.1",
     "express-jwt-permissions": "^1.2.1",
-    "nodemon": "^1.17.5"
+    "nodemon": "^1.17.5",
+    "sweetalert": "^2.1.0"
   },
   "devDependencies": {
     "standart": "^6.1.0"

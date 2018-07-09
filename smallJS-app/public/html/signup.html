@@ -1,26 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang=en>
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/css/mystyle.css"> 
     <title>Asignación de citas IPS XXX</title>
   </head>
-<body>
-<h1>Login IPS XXX (USERS) </h1>
-<form >
-  <label>Entremos los datos</label><br>
-  Tipo de Usuario
-  <select name="type" id="type">
-    <option value="admin">Administrador</option>
-    <option value="doctor">Doctor</option>
-    <option value="customer">Cliente</option>
-  </select><br>
-  <input type="text" name="name" id="name" placeholder="Nombre..." required><br>
-  <input type="text" name="ccid" id="ccid" placeholder="Cédula..." required><br>
-  <input type="text" name="username" id="username" placeholder="Usuario..." required><br>
-  <input type="text" name="password" id="password" placeholder="Contraseña..." required><br>
-  <button name="new" id='new'>Crear usuario</button>
-</form>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="/public/js/signup.js"></script>
-</body>
+  
+  <body>
+    <div class="allscreen">
+      <div class="container-login" >
+        <div class="bar-login" >
+          <h1>Sign Up </h1>
+        </div>
+        <br>
+        <form >
+          <div class="form-group">
+            <label> Tipo de Usuario </label> <br>
+            <select name="type" id="type" class="form-control">
+              <option value="customer">Paciente</option>
+              <option value="doctor">Doctor</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label> Nombre Completo </label> 
+            <input type="text" name="name" id="name" class="form-control" placeholder="Nombre..." required>
+          </div>
+
+          <div class="form-group">
+            <label> Documento de identificación </label> 
+            <input type="text" name="ccid" id="ccid" class="form-control" placeholder="Cédula..." required>
+          </div>
+
+          <div class="form-group">
+            <label> Nombre de usuario </label> 
+            <input type="text" name="username" id="username" class="form-control" placeholder="Usuario..." required>
+          </div>
+
+          <div class="form-group">
+            <label> Contraseña </label> 
+            <input type="text" name="password" id="password" class="form-control" placeholder="Contraseña..." required>
+          </div>
+          <div class="form-group">        
+            <div class="checkbox">
+              <label><input type="checkbox" name="remember" id="accept">Acepto Términos y Condiciones</label>
+            </div>
+          </div>
+
+          <button name="new" id='newuser' class="btn btn-primary btn-block">Crear usuario</button>
+
+    </form>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="/public/js/login.js"></script>
+  <script src="/public/js/tools.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </body>
 </html>

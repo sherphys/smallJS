@@ -130,7 +130,6 @@ module.exports = function setupAppointment(AppointmentModel, UserModel) {
           query.where.branch = value
           break
         default:
-          console.log('Default')
           query = null
           break
       }
@@ -165,34 +164,28 @@ module.exports = function setupAppointment(AppointmentModel, UserModel) {
       // Aquí hay que poner algo por si no se actualiza.
     }// Fin de async function create
 
-    async function canceledAndUpdate(ccid, appointment) {
+    async function canceledAndUpdate(ccid, id) {
       const condUser = {
         where: {
-          ccid: ccid,
-          type: {
-            [Op.or]:{
-              [Op.eq]:'customer',
-              [Op.eq]:'admin'
-            }
-          }
+          ccid: ccid
         }
       }
       // Luego creamos una variable que nos devuelva si existe ese usuario como cliente
       const user   = await UserModel.findOne(condUser)
        // Probar que existe la cita
-      const appointment   = await AppointmentModel.findById(appointment.id)
+      const appointment   = await AppointmentModel.findById(id)
       // o por el id de la cita, para ese usamos findId
       // Existe y es un cliente
-      if (user && appointment.assigned === 2) {
-        if (user.type === 'customer' && appointment.assignedid === user.ccid || user.type === 'admin') {
-          let changes={assignedid:'', assignedname:'', state:1}
+      if (user && appointment.state === 2) {
+        if ((user.type === 'customer' && appointment.assignedid === user.ccid) || user.type === 'admin') {  
+          let changes={assignedid:0, assignedname:'', state:1}
           let selector= {
             where: {
               id: appointment.id 
             }
           }
           const updated = await AppointmentModel.update(changes, selector)  
-          return updated ? AppointmentModel.findOne(appointment.id) : appointment
+          return updated ? AppointmentModel.findById(appointment.id) : appointment
         }
       }
       else return appointment

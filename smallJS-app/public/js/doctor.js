@@ -4,113 +4,127 @@
 
 'user strict'
 
-// Obtenemos el nombre y la cédula del ciente que inicia sesión
-
-var nameGet = window.sessionStorage.getItem('name')
-var ccidGet = window.sessionStorage.getItem('ccid')
-$('#title').replaceWith('NOMBRE: ' + nameGet + ' CC: ' + ccidGet)
 
 // Sí se hace click en nueva cita se carga el archivo appointment.html en el sector indicado
-var bnew = $('#new_app').click(function() {
-  $('#space').load('/public/html/appointment.html', function() {
-    $(document).ready(function() {
-      $('#day').change(function() {
-        var changeday = $(this)
-        if (changeday) {
-          filtertime($('#day').val())
-          $('#hourinit').removeAttr('disabled')
-          $('#hourend').removeAttr('disabled')
-        }
-      })
-    })
-    bcreation()
-  })
+let buttonNew = $('#new_app').click(function() {
+  let range ={
+    delta:['00','20','40'],
+    limDown:9,
+    limUp:18
+  } 
+  loadValideDateAndCreationApp(range)
   return false
 })
 
-function filtertime(changeday) {
-  // console.log(changeday)
-  data = {
-    day: changeday,
-    doctorname: nameGet
-  }
-  $.ajax({
-    type: 'POST',
-    url: 'http://localhost:3000/valide',
-    data: JSON.stringify(data),
-    contentType: 'application/json',
-    dataType: 'json',
-    success: function(data) {
-      var hourinit = []
-      var hourend = []
-      for (var i = 0; i < data.length; i++)      {
-        hourinit[i] = data[i].hourinit
-        hourend[i] = data[i].hourend
-      }
-      listHourInitAndEnd(hourinit, hourend, 9, 18, ['00', '20', '40'])
-    },
-    error: function(data) {
-      if (data.status == 500) {
-        alert('ERROR 500 ' + data.responseText)
-      }
-    }
+function loadValideDateAndCreationApp(range){
+    $('#space').load('/public/html/appointment.html', function() {
+      $(document).ready(function() {
+        $('#day').change(function() {
+          let changeday = $(this)
+          if (changeday) {
+            filterValidateTime($('#day').val(),range).then(listHourInitAndEnd).catch(showalert)
+          }
+        })
+      })
+      appointmentCreation()
   })
 }
 
-function listHourInitAndEnd(hourinit, hourend, init, end, delta) {
-  var selectionInit = ''
-  var selectionEnd = ''
-  // init, end -->hour
-  // delta -->min
+function filterValidateTime(choosenday,range) {
+  data = {
+    day: choosenday,
+    doctorname: nameGet
+  }
+  return new Promise((resolve,reject)=>{
+    $.ajax({
+      type: 'POST',
+      url: 'http://localhost:3000/valide',
+      data: JSON.stringify(data),
+      contentType: 'application/json',
+      dataType: 'json',
+      success: function(data) {
+        let hourinit = []
+        let hourend = []
+        for (let i = 0; i < data.length; i++){
+          hourinit[i] = data[i].hourinit
+          hourend[i] = data[i].hourend
+        }
+        let finalData={
+          hourinit,
+          hourend,
+          init:range.limDown,
+          end:range.limUp,
+          width:range.delta.length,
+          nlength:(range.limUp-range.limDown),
+          delta:range.delta
+        }
+        resolve(finalData)
+      },
+      error: function(data) {
+        if (data.status == 500) {
+          reject('ERROR 500 ' + data.responseText)
+        }
+      }
+    })
+  })
+}
 
-  var listInitTemp = timelist(hourinit, init, end, delta, 'init')
-  var listEndTemp = timelist(hourend, init, end, delta, 'end')
-
-  listInit = listInitTemp.filter((number) => { return (listEndTemp.indexOf(number) - listInitTemp.indexOf(number) != 0) })
-  listEnd = listEndTemp.filter((number) => { return (listEndTemp.indexOf(number) - listInitTemp.indexOf(number) != 0) })
+function listHourInitAndEnd(finalData) {
+  let selectionInit = ''
+  let selectionEnd = '' 
+  
+  let listInitEnd = timeListInitAndEnd(finalData)
+  let listInit=listInitEnd[0]
+  let listEnd=listInitEnd[1]
 
   for (i = 0; i < listInit.length; i++) {
     selectionInit += "<option value='" + listInit[i] + "'>" + listInit[i] + '</option>'
     selectionEnd += "<option value='" + listEnd[i] + "'>" + listEnd[i] + '</option>'
   }
-
   $('#hourinit').html(selectionInit)
   $('#hourend').html(selectionEnd)
-  function timelist(hourlist, init, end, delta, type)  {
-    var list = []
-    var width = delta.length
-    var nlength = (end - init) + 1
-    var k = 0
+  $('#hourinit').removeAttr('disabled')
+  $('#hourend').removeAttr('disabled')
+  
+}
+function timeListInitAndEnd(finalData) {
+  let list = []
+  let k = 0
 
-    for (var i = 0; i < nlength; i++) {
-      for (var j = 0; j < width; j++) {
-        list[k] = zeroFill(init + i, 2) + ':' + delta[j] + ':00'
-        k = k + 1
-      }
+  for (let i = 0; i < finalData.nlength+1; i++) {
+    for (let j = 0; j < finalData.width; j++) {
+      list[k] = zeroFill(finalData.init + i, 2) + ':' + finalData.delta[j] + ':00'
+      k = k + 1
     }
-
-    var listcopy = []
-    if (type == 'init') {
-      listcopy = list.slice(0, list.length - 3)
-    }
-
-    if (type == 'end') {
-      listcopy = list.slice(1, list.length - 2)
-    }
-
-    return listcopy.filter((number) => { return hourlist.indexOf(number) == -1 })
   }
 
-  function zeroFill(number, width)  {
-    width -= number.toString().length
-    if (width > 0)    {
-      return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number
-    }
-    return number + '' // always return a string
-  }
+  let listcopy = [[],[]]
+  listcopy[0] = list.slice(0, list.length - 3)
+  listcopy[1] = list.slice(1, list.length - 2)
+  listcopy[0]=listcopy[0].filter((number) => { return finalData.hourinit.indexOf(number) == -1 })
+  listcopy[1]=listcopy[1].filter((number) => { return finalData.hourend.indexOf(number) == -1 })
+
+  return filterchain(listcopy)
+}
+function filterchain(listcopy)
+{
+
+  let listInitEnd=[[],[]]
+  listInitEnd[0] = listcopy[0].filter((number) => { return (listcopy[1].indexOf(number) - listcopy[0].indexOf(number) != 0) })
+  listInitEnd[1] = listcopy[1].filter((number) => { return (listcopy[1].indexOf(number) - listcopy[0].indexOf(number) != 0) })
+  
+  return listInitEnd
 }
 
-function bcreation() {
+function zeroFill(number, width)  {
+  width -= number.toString().length
+  if (width > 0)    {
+    return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number
+  }
+  return number + '' // always return a string
+}
+
+function appointmentCreation() {
   $('#creation').click(function() {
     data = {
       type: $('#type').val(),
@@ -135,11 +149,11 @@ function bcreation() {
           let ask = (question, yes, no) => {
             (confirm(question)) ? yes() : no()
           }
-        ask('La cita fue guardada con éxito. ¿Desea registrar otra cita?',
-        () => { $('#new_app').click() },
-        () => { window.location.href = '/public/html/indexdoctor.html' })
-        },
-        error: function(data) {
+          ask('La cita fue guardada con éxito. ¿Desea registrar otra cita?',
+          () => { $('#new_app').click() },
+          () => { window.location.href = '/public/html/indexdoctor.html' })
+          },
+          error: function(data) {
           if (data.status == 500) {
             alert('ERROR 500 ' + data.responseText)
           }
@@ -150,7 +164,7 @@ function bcreation() {
   })
 }
 
-var brevised = $('#revised').click(function() {
+var buttonRevised = $('#revised').click(function() {
   data = {
     ccid: ccidGet,
     doctorname: nameGet
@@ -174,7 +188,7 @@ var brevised = $('#revised').click(function() {
 })
 
 function tablemake(data) {
-  var rowTable = '<h1> TODAS LAS CITAS </h1> <table> <tr> \n  <th>Día</th> \n  <th>Inicio</th> \n  <th>Finalización</th> \n  <th>Ubicación</th> \n  <th>Asignada a</th>\n <th>CC del paciente</th></tr>'
+  var rowTable = '<h1> TODAS LAS CITAS </h1> <table class="table table-hover"> <tr> \n  <th>Día</th> \n  <th>Inicio</th> \n  <th>Finalización</th> \n  <th>Ubicación</th> \n  <th>Asignada a</th>\n <th>CC del paciente</th></tr>'
   branch = {1:'Primaria', 2:'Secundaria', 3:'Terciaria'}
   for (i = 0; i < data.length; i++) {
     rowTable += '\n <tr> \n <td> ' + data[i].day + ' </td> \n <td> ' + data[i].hourinit + ' </td> \n <td> '
@@ -185,8 +199,8 @@ function tablemake(data) {
   $('#space').html(rowTable)
 }
 
-var bclose = $('#close').click(function() {
-  sessionStorage.clear()
-  window.location.href = 'http://localhost:3000/'
-  return false
-})
+/*var buttonModifiqued = $('#modifiqued').click(function() {
+
+})*/
+
+

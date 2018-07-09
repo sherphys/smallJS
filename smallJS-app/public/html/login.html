@@ -1,25 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/css/mystyle.css"> 
     <title>Asignación de citas IPS XXX</title>
   </head>
-<body>
-<h1>Login IPS XXX (USERS) </h1>
-<form>
-  <button name="new"   id='new'>Nuevo Usuario</button><br>               
-  <br>
-  Tipo de Usuario
-  <select name="type" id="type">
-    <option value="customer">Cliente</option>
-    <option value="admin">Administrador</option>
-    <option value="doctor">Doctor</option>
-  </select><br>
-  <input type="text" name="ccid" id="ccid" placeholder="Cédula..." required><br>
-  <input type="text" name="password" id="pass" placeholder="Contraseña..." required><br>
-  <button name="login" id='login'>Iniciar sesión</button>
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script src="/public/js/login.js"></script>
-</form>
-</body>
+  
+  <body>
+    <div class="allscreen">
+      <div class="container-login" >
+        <div class="bar-login" >
+          <h1>Login </h1>
+        </div>
+        <br>
+        <form>   
+            <div class="form-group">
+              <label>Documento de Identificación</label> 
+              <div class="inner-addon left-addon">
+                <i class="glyphicon glyphicon-user"></i>
+                <input type="text" name="ccid" id="ccid" placeholder="Cédula..." class="form-control" required> <br>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Contraseña</label>
+              <div class="inner-addon left-addon">
+                <i class="glyphicon glyphicon-lock"></i>
+                <input type="text" name="password" id="pass" placeholder="Contraseña..." class="form-control"  required><br>
+                </div>
+            </div>  
+            <div class="form-group">        
+              <label><input type="checkbox" name="remember" id="remember"> Recúerdame</label>
+            </div>
+            <button name="login" id='login' class="btn btn-primary pull-right">Iniciar sesión</button> 
+            <br>
+            <br>
+            <button name="login" class="btn btn-link" id="recover" style="float:right;">Recuperar contraseña</button>
+            <br>
+            <br>
+            <div class="bar-login" >
+            <button name="new" id='new' class="btn btn-link">¿No tienes cuenta? Registrate</button><br>  
+            </div>
+          </form>  
+    
+      </div>
+    
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/public/js/login.js"></script>
+    <script src="/public/js/tools.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </body>
 </html>

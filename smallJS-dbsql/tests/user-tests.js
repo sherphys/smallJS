@@ -22,8 +22,9 @@ let sandbox = null
 let single = Object.assign({}, userFixtures.single)
 
 let ccidArgs = {
-  where: { ccid,
-          type: single.type}
+  where: { 
+    ccid
+  }
 }
 
 let newUser = {

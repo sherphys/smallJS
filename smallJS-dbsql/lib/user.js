@@ -14,18 +14,21 @@ module.exports = function setupUser(UserModel) {
   async function createOrUpdate(user) {
     const cond = {
       where: {
-        ccid: user.ccid,
-        type: user.type
+        ccid: user.ccid
       }
     }
-     // Primero vamos a hacer un funcion asincrona para crear o actualizar los datos
+    // Primero vamos a hacer un funcion asincrona para crear o actualizar los datos
     // El usuario existe si existe la condición
     // Luego creamos una variable que nos devuelva si existe o no la condición
     const existingUser   = await UserModel.findOne(cond)
 
     // De ser verdadera, entonces el usuario existe y realizamos una actualización
     if (existingUser) {
-      const updated = await UserModel.update(user, cond)
+      //Vamos a copiar el user que viene con los nuevos cambios
+      let changes=Object.assign({}, user)
+      //Pero no vamos a permitir cambios de tipo
+      delete changes.type
+      const updated = await UserModel.update(changes, cond)
       return updated ? UserModel.findOne(cond) : existingUser
     }
 
@@ -69,7 +72,6 @@ module.exports = function setupUser(UserModel) {
 
     switch (property) {
       case 'type':
-        console.log('Type')
         result = UserModel.findAll({
           where: {
             type: value
@@ -77,7 +79,6 @@ module.exports = function setupUser(UserModel) {
         })
         break
       case 'connected':
-        console.log('Connected')
         result = UserModel.findAll({
           where: {
             connected: value
@@ -85,7 +86,6 @@ module.exports = function setupUser(UserModel) {
         })
         break
       case 'pid':
-        console.log('Pid')
         result = UserModel.findAll({
         where: {
           pid: value
@@ -93,7 +93,6 @@ module.exports = function setupUser(UserModel) {
       })
         break
       default:
-        console.log('Default')
         result = UserModel.findAll()
         break
     }
