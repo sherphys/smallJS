@@ -14,19 +14,19 @@ location.search
     section[k] = v
   })
 
-  if(section.id) {
-    switch(section.id) {
-      case "find":
-        $("#findapp").removeClass("disabled")
-      break
-      case "revised":
-        $("#revisedapp").removeClass("disabled")
-      break
-      case "modifiqued":
-        $("#canceledapp").removeClass("disabled")
-      break
-    }
+if(section.id) {
+  switch(section.id) {
+    case "find":
+      $("#findapp").removeClass("disabled")
+    break
+    case "revised":
+      $("#revisedapp").removeClass("disabled")
+    break
+    case "modifiqued":
+      $("#canceledapp").removeClass("disabled")
+    break
   }
+}
 
 var redirect = $('.filter').click(function() {
   var id = $(this).attr('id')

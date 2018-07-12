@@ -14,7 +14,8 @@ module.exports = {
     operatorsAliases: false
   },
   auth: {
-    secret: process.env.SECRET || 'itachi'
+    secret: process.env.SECRET || 'itachi',
+    admincheck: process.env.ADMINCHECK || 'aja',
   }
 }
 

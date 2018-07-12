@@ -9,51 +9,78 @@
   </head>
   
   <body>
-    <div class="allscreen">
-      <div class="container-login" >
-        <div class="bar-login" >
-          <h1>Sign Up </h1>
-        </div>
-        <br>
-        <form >
-          <div class="form-group">
-            <label> Tipo de Usuario </label> <br>
-            <select name="type" id="type" class="form-control">
-              <option value="customer">Paciente</option>
-              <option value="doctor">Doctor</option>
-              <option value="admin">Administrador</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label> Nombre Completo </label> 
-            <input type="text" name="name" id="name" class="form-control" placeholder="Nombre..." required>
-          </div>
-
-          <div class="form-group">
-            <label> Documento de identificación </label> 
-            <input type="text" name="ccid" id="ccid" class="form-control" placeholder="Cédula..." required>
-          </div>
-
-          <div class="form-group">
-            <label> Nombre de usuario </label> 
-            <input type="text" name="username" id="username" class="form-control" placeholder="Usuario..." required>
-          </div>
-
-          <div class="form-group">
-            <label> Contraseña </label> 
-            <input type="text" name="password" id="password" class="form-control" placeholder="Contraseña..." required>
-          </div>
-          <div class="form-group">        
-            <div class="checkbox">
-              <label><input type="checkbox" name="remember" id="accept">Acepto Términos y Condiciones</label>
+    <div class="allscreen-index">
+        <nav class="navbar navbar-light" style="background-color: rgba(4, 27, 231, 0.3);">
+            <div class="container-fluid">          
+              <div class="navbar-header">
+                  <img style=" float: left;
+                  margin: 0px 10px 0px 0px;" src="/public/images/logo.png"  width="50" height="50" alt="">
+                  <a class="navbar-brand" href="http://localhost:3000" > Agenda IPS XXX</a>
+              </div>
+  
+              <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle navbar-btn" type="button" data-toggle="dropdown">Login
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        <li><a href="/public/html/login.html?type=customer">Paciente</a></li>
+                        <li><a href="/public/html/login.html?type=doctor">Doctor</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <button id="hrefsignup"style="margin-left:10px;" class="btn btn-primary dropdown-toggle navbar-btn" type="button" data-toggle="dropdown">Sign Up</button>
+                  </li>  
+                </ul>             
+              </div>
+  
+             
             </div>
+          </nav>
+      
+      <div class="allscreen-center">
+
+        <div class="container-login" >
+          <div class="bar-login" >
+            <h1>Sign Up </h1>
           </div>
+          <br>
+          <form >
+            <div class="form-group">
+              <label> Nombre Completo </label> 
+              <input type="text" name="name" id="name" class="form-control" placeholder="Nombre..." required>
+            </div>
 
-          <button name="new" id='newuser' class="btn btn-primary btn-block">Crear usuario</button>
+            <div class="form-group">
+              <label> Documento de identificación </label> 
+              <input type="text" name="ccid" id="ccid" class="form-control" placeholder="Cédula..." required>
+            </div>
 
-    </form>
-  </div>
+            <div class="form-group">
+              <label> Nombre de usuario </label> 
+              <input type="text" name="username" id="username" class="form-control" placeholder="Usuario..." required>
+            </div>
+
+            <div class="form-group">
+              <label> Contraseña </label> 
+              <div class="inner-addon">
+              <input type="password" name="password" id="password" class="form-control" placeholder="Contraseña..." required>
+              <span toggle="#password" class="toggle-password glyphicon glyphicon-eye-open"></span>
+              </div>
+            </div>
+            <div class="form-group">        
+              <div class="checkbox">
+                <label><input type="checkbox" name="remember" id="accept">Acepto Términos y Condiciones</label>
+              </div>
+            </div>
+            <button name="new" id='newuser' class="btn btn-primary btn-block">Crear usuario</button>
+          </form>
+        </div>
+      
+      </div>
+
+    </div>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <script src="/public/js/login.js"></script>
   <script src="/public/js/tools.js"></script>

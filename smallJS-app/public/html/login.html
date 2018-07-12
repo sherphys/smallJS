@@ -9,7 +9,37 @@
   </head>
   
   <body>
-    <div class="allscreen">
+    <div class="allscreen-index">
+        <nav class="navbar navbar-light" style="background-color: rgba(4, 27, 231, 0.3);">
+            <div class="container-fluid">          
+              <div class="navbar-header">
+                  <img style=" float: left;
+                  margin: 0px 10px 0px 0px;" src="/public/images/logo.png"  width="50" height="50" alt="">
+                  <a class="navbar-brand" href="http://localhost:3000" > Agenda IPS XXX</a>
+              </div>
+  
+              <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle navbar-btn" type="button" data-toggle="dropdown">Login
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        <li><a href="/public/html/login.html?type=customer">Paciente</a></li>
+                        <li><a href="/public/html/login.html?type=doctor">Doctor</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <button id="hrefsignup"style="margin-left:10px;" class="btn btn-primary dropdown-toggle navbar-btn" type="button" data-toggle="dropdown">Sign Up</button>
+                  </li>  
+                </ul>             
+              </div>
+  
+             
+            </div>
+          </nav>
+
+      <div class="allscreen-center">
       <div class="container-login" >
         <div class="bar-login" >
           <h1>Login </h1>
@@ -26,10 +56,12 @@
 
             <div class="form-group">
               <label>Contraseña</label>
-              <div class="inner-addon left-addon">
-                <i class="glyphicon glyphicon-lock"></i>
-                <input type="text" name="password" id="pass" placeholder="Contraseña..." class="form-control"  required><br>
-                </div>
+              <div class="inner-addon">
+                <i class="glyphicon glyphicon-lock" ></i>
+                <input type="password" name="password" id="password" placeholder="Contraseña..." class="form-control"  style="padding-left:  30px;"required><br>
+                <span toggle="#password" class="toggle-password glyphicon glyphicon-eye-open"></span>
+              </div>
+      
             </div>  
             <div class="form-group">        
               <label><input type="checkbox" name="remember" id="remember"> Recúerdame</label>
@@ -46,7 +78,8 @@
           </form>  
     
       </div>
-    
+      </div>  
+
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

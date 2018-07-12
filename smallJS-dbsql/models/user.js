@@ -13,8 +13,6 @@ module.exports = function setupUserModel(config) {
     // User is admin, doctor, customer?
     type: {
       type: Sequelize.STRING,
-      allowNull: false,
-      defaultValue: 'customer'
     },
 
     // Nuestro propio id usando documento de identidad

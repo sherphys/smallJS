@@ -8,13 +8,17 @@ table tr {
   display: none;
 }
 
+
+.enabled{
+  display: inline;
+}
+
 .container-login{
   background-color:rgb(255, 255, 255,0.6);
   width: 400px;
-  margin-top: 10px;
+  margin-top: 0px;
   padding: 10px 10px 10px 10px;
   overflow: auto;
-
 }
 
 .container-space{
@@ -26,13 +30,18 @@ table tr {
   text-align: center;
 }
 
-.allscreen
+.allscreen-center
 {
-  background-image:url(/public/images/fondo3.jpg); 
-  background-position:center;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%; 
+}
+
+.allscreen-index
+{
+  background-image:url(/public/images/fondo3.jpg); 
+  background-position:center;
   height: 100%; 
   background-size: 100% 100%;
   background-repeat: no-repeat;
@@ -73,7 +82,7 @@ body, html {
 .inner-addon .glyphicon {
 position: absolute;
 padding: 10px;
-pointer-events: none;
+/*pointer-events: none;*/
 }
 
 /* align icon */
@@ -129,4 +138,26 @@ pointer-events: none;
 .sidebar-nav>.sidebar-brand a:hover {
   color: #fff;
   background: none;
+}
+
+.toggle-password{
+  right: 0px;
+}
+
+.allscreen-display-middle{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  -ms-transform:translate(-50%,-50%);
+}
+
+.animate-bottom{
+  position:relative;
+  font-size:64px!important;
+  animation:animatebottom 0.4s
+}
+
+@keyframes animatebottom{
+  from{bottom:-300px;opacity:0} to{bottom:0;opacity:1}
 }
