@@ -14,7 +14,7 @@ const JWTStrategy = passportJWT.Strategy
 
 const config = require('./config')
 
-var params = {  
+/*var params = {  
   secretOrKey: config.auth.secret,
   jwtFromRequest: ExtractJwt.fromAuthHeader()
 };
@@ -29,9 +29,7 @@ var strategy= new JWTStrategy(data, function (payload, done) {
     .catch(err => cb(err));
   })
 
-passport.use(strategy)
-
-
+passport.use(strategy)*/
 
 
 /*MÓDULOS DE SERVICIOS*/
@@ -45,8 +43,6 @@ api.use('/public', express.static(__dirname + '/public'))
 api.use(bodyParser.urlencoded({ extended: true }))
 api.use(express.json())     
 api.use(passport.initialize())  
-
-
 
 
 //Cargamos las DB en todas partes
@@ -155,12 +151,12 @@ api.post('/login', async (req, res) => {
     })
     var payload = {
       ccid: user.ccid,
+      username:user.username,
       password:user.password,
       type:user.type
     }
     let token = jwt.sign(payload, config.auth.secret);
     res.status(200).json({message: "ok", token: token});
-    //res.status(200).send(JSON.stringify(user))
   }    
   else {
     if(user.password != clone.password ) res.status(400).send("Contraseña equivocada")

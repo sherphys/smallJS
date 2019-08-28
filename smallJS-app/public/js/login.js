@@ -79,7 +79,6 @@ function loginUser(){
         },*/
         //headers: {"Authorization": localStorage.getItem('token')},
         success: function(data) {
-          alert(JSON.stringify(data.token))
           //resolve(data)
         },
         error: function(data) {
@@ -178,7 +177,7 @@ function nextStep(user) {
 
   if(user){
     if(window.localStorage.getItem('checkIPS')){
-      window.localStorage.setItem('name', user.name)
+      window.localStorage.setItem('token', token)
       window.localStorage.setItem('ccid', user.ccid)
     }
     else{
